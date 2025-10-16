@@ -1,6 +1,6 @@
 {
   "name": "@mixxtor/adonisjs-shortlink",
-  "version": "1.0.0-beta.0",
+  "version": "1.0.0-beta.1",
   "description": "A standalone URL shortener service for AdonisJS v6",
   "main": "build/index.js",
   "type": "module",
@@ -63,7 +63,8 @@
     "eslint": "^9.37.0",
     "prettier": "^3.6.2",
     "release-it": "^19.0.5",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.46.1"
   },
   "peerDependencies": {
     "@adonisjs/core": "^6.19.0",
