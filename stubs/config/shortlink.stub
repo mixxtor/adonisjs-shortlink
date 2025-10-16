@@ -1,3 +1,6 @@
+{{{
+  exports({ to: app.configPath('shortlink.ts') })
+}}}
 import env from '#start/env'
 import { defineConfig } from '@mixxtor/adonisjs-shortlink'
 

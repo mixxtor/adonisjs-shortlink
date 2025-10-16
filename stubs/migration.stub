@@ -1,3 +1,7 @@
+{{#var migrationFileName = migration.fileName}}
+{{{
+  exports({ to: app.migrationsPath(migrationFileName) })
+}}}
 import { BaseSchema } from '@adonisjs/lucid/schema'
 
 export default class extends BaseSchema {
