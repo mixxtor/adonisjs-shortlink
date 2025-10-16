@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 
 
+## [1.0.0-beta.3](https://github.com/mixxtor/adonisjs-shortlink/compare/v1.0.0-beta.2...v1.0.0-beta.3) (2025-10-16)
+
+### ✨ Features
+
+* enhance shortlink service with model support and validation ([883d24b](https://github.com/mixxtor/adonisjs-shortlink/commit/883d24b1a0fdf2fc2ad33672c129f24bdb1649d1))
+
 ## [1.0.0-beta.2](https://github.com/mixxtor/adonisjs-shortlink/compare/v1.0.0-beta.1...v1.0.0-beta.2) (2025-10-16)
 
 ### 🐛 Bug Fixes
