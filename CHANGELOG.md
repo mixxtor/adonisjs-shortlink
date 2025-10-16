@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 
 
+## [1.0.0-beta.2](https://github.com/mixxtor/adonisjs-shortlink/compare/v1.0.0-beta.1...v1.0.0-beta.2) (2025-10-16)
+
+### 🐛 Bug Fixes
+
+* add missing export statements to shortlink and migration stubs ([3e896b0](https://github.com/mixxtor/adonisjs-shortlink/commit/3e896b0f63f4ecdf7697ef2956ffb858b5a52b76))
+* update logo URL in README and add logo.svg file ([05cb638](https://github.com/mixxtor/adonisjs-shortlink/commit/05cb638d1d48edc489a9524784c1b5437675456d))
+
 ## [1.0.0-beta.1](https://github.com/mixxtor/adonisjs-shortlink/compare/v1.0.0-beta.0...v1.0.0-beta.1) (2025-10-16)
 
 ### 🐛 Bug Fixes
