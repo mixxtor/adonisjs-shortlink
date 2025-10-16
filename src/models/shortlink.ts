@@ -1,0 +1,41 @@
+import { BaseModel, column, SnakeCaseNamingStrategy } from '@adonisjs/lucid/orm'
+import { DateTime } from 'luxon'
+import type { ShortlinkAttributes } from '../types.js'
+
+export default class Shortlink extends BaseModel implements ShortlinkAttributes {
+  static namingStrategy = new SnakeCaseNamingStrategy()
+  public static connection = 'pg'
+  public static table = 'shortlinks'
+
+  @column({ isPrimary: true })
+  declare id: number
+
+  @column()
+  declare slug: string
+
+  @column()
+  declare original_url: string
+
+  @column()
+  declare clicks: number
+
+  @column({
+    prepare: (value: Record<string, any> | null) => (value ? JSON.stringify(value) : null),
+    consume: (value: string | null) => (value ? JSON.parse(value) : null),
+  })
+  declare metadata: Record<string, any> | null
+
+  @column.dateTime({ autoCreate: true })
+  declare created_at: DateTime
+
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updated_at: DateTime
+
+  /**
+   * Increment the click counter
+   */
+  async incrementClicks(): Promise<void> {
+    this.clicks += 1
+    await this.save()
+  }
+}
