@@ -1,4 +1,4 @@
-![@mixxtor/adonisjs-shortlink](https://socialify.git.ci/mixxtor/adonisjs-shortlink/image?description=1&descriptionEditable=URL%20shortener%20service%20for%20AdonisJS%20v6.&font=Jost&forks=1&issues=1&logo=https%3A%2F%2Fraw.githubusercontent.com%2Fmixxtor%2Fshortlink%2Flogo.svg&name=1&owner=1&pattern=Charlie%20Brown&pulls=1&stargazers=1&theme=Auto)
+![@mixxtor/adonisjs-shortlink](https://socialify.git.ci/mixxtor/adonisjs-shortlink/image?description=1&descriptionEditable=URL%20shortener%20service%20for%20AdonisJS%20v6.&font=Jost&forks=1&issues=1&logo=https://raw.githubusercontent.com/mixxtor/adonisjs-shortlink/1277869dc1a89bac3ef9764d42637b5b81103daf/logo.svg&name=1&owner=1&pattern=Charlie%20Brown&pulls=1&stargazers=1&theme=Auto)
 
 A standalone URL shortener service for AdonisJS v6 applications.
 

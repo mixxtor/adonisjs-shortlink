@@ -3,7 +3,7 @@ import ShortlinkService from '../services/shortlink_service.js'
 import type { ShortlinkConfig } from '../types.js'
 
 export default class ShortlinkController {
-  constructor(private config: ShortlinkConfig) {}
+  constructor(private config: ShortlinkConfig) { }
 
   /**
    * Redirect to original URL based on slug
@@ -23,9 +23,12 @@ export default class ShortlinkController {
 
     // Increment click count in background (don't wait for it)
     if (this.config.trackClicks) {
-      shortlink.incrementClicks().catch((error) => {
-        console.error('Failed to increment shortlink clicks:', error)
-      })
+      // Use type assertion or safe property access
+      if (typeof shortlink.incrementClicks === 'function') {
+        shortlink.incrementClicks().catch((error: Error) => {
+          console.error('Failed to increment shortlink clicks:', error)
+        })
+      }
     }
 
     // Redirect to original URL

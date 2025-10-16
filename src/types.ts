@@ -5,11 +5,18 @@
  */
 
 import { DateTime } from 'luxon'
+import { LucidModel } from '@adonisjs/lucid/types/model'
 
 /**
  * Configuration options for the shortlink service
  */
 export interface ShortlinkConfig {
+  /**
+   * The Lucid model to use for shortlink operations
+   * @example () => import('#models/shortlink')
+   */
+  model: () => Promise<{ default: LucidModel }> | LucidModel
+
   /**
    * The domain used for generating short URLs
    * @example 'short.domain.com'
@@ -70,6 +77,14 @@ export interface CreateShortlinkPayload {
 }
 
 /**
+ * Base interface that any shortlink model should implement
+ */
+export interface ShortlinkModelContract extends ShortlinkAttributes {
+  incrementClicks?(): Promise<void>
+  delete(): Promise<void>
+}
+
+/**
  * Shortlink service interface
  */
 export interface ShortlinkServiceContract {
@@ -77,10 +92,10 @@ export interface ShortlinkServiceContract {
     originalUrl: string,
     customSlug?: string,
     metadata?: Record<string, any>
-  ): Promise<ShortlinkAttributes>
-  getBySlug(slug: string): Promise<ShortlinkAttributes | null>
-  getByOriginalUrl(originalUrl: string): Promise<ShortlinkAttributes | null>
-  getOrCreate(originalUrl: string, metadata?: Record<string, any>): Promise<ShortlinkAttributes>
+  ): Promise<ShortlinkModelContract>
+  getBySlug(slug: string): Promise<ShortlinkModelContract | null>
+  getByOriginalUrl(originalUrl: string): Promise<ShortlinkModelContract | null>
+  getOrCreate(originalUrl: string, metadata?: Record<string, any>): Promise<ShortlinkModelContract>
   delete(slug: string): Promise<boolean>
   getShortUrl(slug: string, domain?: string): string
 }

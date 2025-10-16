@@ -3,7 +3,16 @@ import ShortlinkService from '../src/services/shortlink_service.js'
 
 test.group('ShortlinkService', () => {
   test('generateSlug should create a slug of specified length', ({ assert }) => {
+    const mockModel = class MockModel {
+      static query() {
+        return {
+          where() { return { first: () => null } }
+        }
+      }
+    }
+
     const service = new ShortlinkService({
+      model: () => mockModel as any,
       domain: 'short.test.com',
       slugLength: 8,
       trackClicks: true,
@@ -16,7 +25,16 @@ test.group('ShortlinkService', () => {
   })
 
   test('generateSlug should create unique slugs', ({ assert }) => {
+    const mockModel = class MockModel {
+      static query() {
+        return {
+          where() { return { first: () => null } }
+        }
+      }
+    }
+
     const service = new ShortlinkService({
+      model: () => mockModel as any,
       domain: 'short.test.com',
       slugLength: 8,
       trackClicks: true,

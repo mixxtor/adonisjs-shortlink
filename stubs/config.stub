@@ -1,0 +1,84 @@
+import env from '#start/env'
+import { defineConfig } from '@mixxtor/adonisjs-shortlink'
+
+const shortlinkConfig = defineConfig({
+  /*
+  |--------------------------------------------------------------------------
+  | Shortlink Model
+  |--------------------------------------------------------------------------
+  |
+  | The Lucid model to use for shortlink operations. This allows you to
+  | use a custom model or extend the package's default model.
+  |
+  */
+  model: () => import('#models/shortlink'),
+
+  /*
+  |--------------------------------------------------------------------------
+  | Short Domain
+  |--------------------------------------------------------------------------
+  |
+  | The domain used for generating short URLs. This should be a short,
+  | memorable domain name dedicated to your shortlink service.
+  |
+  | Example: short.domain.com, s.yourdomain.com, go.yourdomain.com
+  |
+  */
+  domain: env.get('SHORT_DOMAIN'),
+
+  /*
+  |--------------------------------------------------------------------------
+  | Slug Length
+  |--------------------------------------------------------------------------
+  |
+  | The default length of generated slugs. Longer slugs provide more
+  | unique combinations but result in longer URLs.
+  |
+  */
+  slugLength: env.get('SHORT_SLUG_LENGTH', 8),
+
+  /*
+  |--------------------------------------------------------------------------
+  | Enable Click Tracking
+  |--------------------------------------------------------------------------
+  |
+  | Whether to track clicks on shortlinks. When enabled, each click will
+  | increment the click counter in the database.
+  |
+  */
+  trackClicks: env.get('SHORT_TRACK_CLICKS', true),
+
+  /*
+  |--------------------------------------------------------------------------
+  | Redirect Status Code
+  |--------------------------------------------------------------------------
+  |
+  | The HTTP status code to use for redirects.
+  | 301 = Permanent redirect (cached by browsers)
+  | 302 = Temporary redirect (not cached)
+  |
+  */
+  redirectStatusCode: env.get('SHORT_REDIRECT_STATUS', 301),
+
+  /*
+  |--------------------------------------------------------------------------
+  | Database Connection
+  |--------------------------------------------------------------------------
+  |
+  | The database connection to use for shortlinks
+  |
+  */
+  connection: env.get('SHORT_DB_CONNECTION', 'pg'),
+
+  /*
+  |--------------------------------------------------------------------------
+  | Table Name
+  |--------------------------------------------------------------------------
+  |
+  | The database table name for shortlinks
+  |
+  */
+  tableName: env.get('SHORT_TABLE_NAME', 'shortlinks'),
+})
+
+export default shortlinkConfig

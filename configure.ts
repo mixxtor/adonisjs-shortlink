@@ -19,6 +19,11 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'config/shortlink.stub', {})
 
   /**
+   * Publish model file
+   */
+  await codemods.makeUsingStub(stubsRoot, 'models/shortlink.stub', {})
+
+  /**
    * Publish migration file
    */
   await codemods.makeUsingStub(stubsRoot, 'migration.stub', {

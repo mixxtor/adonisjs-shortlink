@@ -4,7 +4,13 @@ import type { ShortlinkConfig } from './types.js'
 /**
  * Define shortlink configuration with validation
  */
-export function defineConfig(config: Partial<ShortlinkConfig>): ShortlinkConfig {
+export function defineConfig(config: ShortlinkConfig): ShortlinkConfig {
+  if (!config.model) {
+    throw new RuntimeException(
+      'Shortlink model is required. Please provide a model configuration.'
+    )
+  }
+
   if (!config.domain) {
     throw new RuntimeException(
       'Shortlink domain is required. Please set SHORT_DOMAIN in your environment.'
@@ -12,6 +18,7 @@ export function defineConfig(config: Partial<ShortlinkConfig>): ShortlinkConfig 
   }
 
   return {
+    model: config.model,
     domain: config.domain,
     slugLength: config.slugLength ?? 8,
     trackClicks: config.trackClicks ?? true,

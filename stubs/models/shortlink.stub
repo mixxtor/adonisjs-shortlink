@@ -1,8 +1,10 @@
+{{{
+  exports({ to: app.modelsPath('shortlink.ts') })
+}}}
 import { BaseModel, column, SnakeCaseNamingStrategy } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
-import type { ShortlinkAttributes } from '../types.js'
 
-export default class Shortlink extends BaseModel implements ShortlinkAttributes {
+export default class Shortlink extends BaseModel {
   static namingStrategy = new SnakeCaseNamingStrategy()
   public static connection = 'pg'
   public static table = 'shortlinks'
