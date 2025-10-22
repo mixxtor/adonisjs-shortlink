@@ -6,13 +6,16 @@ test.group('ShortlinkService', () => {
     const mockModel = class MockModel {
       static query() {
         return {
-          where() { return { first: () => null } }
+          where() {
+            return { first: () => null }
+          },
         }
       }
     }
 
     const service = new ShortlinkService({
       model: () => mockModel as any,
+      enabled: true,
       domain: 'short.test.com',
       slugLength: 8,
       trackClicks: true,
@@ -28,13 +31,16 @@ test.group('ShortlinkService', () => {
     const mockModel = class MockModel {
       static query() {
         return {
-          where() { return { first: () => null } }
+          where() {
+            return { first: () => null }
+          },
         }
       }
     }
 
     const service = new ShortlinkService({
       model: () => mockModel as any,
+      enabled: true,
       domain: 'short.test.com',
       slugLength: 8,
       trackClicks: true,

@@ -1,28 +1,55 @@
 ![@mixxtor/adonisjs-shortlink](https://socialify.git.ci/mixxtor/adonisjs-shortlink/image?description=1&descriptionEditable=URL%20shortener%20service%20for%20AdonisJS%20v6.&font=Jost&forks=1&issues=1&logo=https://raw.githubusercontent.com/mixxtor/adonisjs-shortlink/1277869dc1a89bac3ef9764d42637b5b81103daf/logo.svg&name=1&owner=1&pattern=Charlie%20Brown&pulls=1&stargazers=1&theme=Auto)
 
-A standalone URL shortener service for AdonisJS v6 applications.
+# @mixxtor/adonisjs-shortlink
 
 [![npm version](https://badge.fury.io/js/@mixxtor%2Fadonisjs-shortlink.svg)](https://www.npmjs.com/package/@mixxtor/adonisjs-shortlink)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20.6.0-green)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue)
+![AdonisJS](https://img.shields.io/badge/AdonisJS-6.x-purple)
 
-## Features
+A powerful, type-safe URL shortener service for AdonisJS v6 with configurable models, advanced click tracking, and production-ready features.
 
-- ✅ **Standalone Operation** - Run independently on its own domain
-- ✅ **Click Tracking** - Monitor shortlink usage statistics
-- ✅ **Customizable Slugs** - Use custom or auto-generated slugs
-- ✅ **TypeScript Support** - Fully typed for better DX
-- ✅ **Easy Integration** - Simple setup with AdonisJS v6
-- ✅ **Database Agnostic** - Works with any Lucid-supported database
+## ✨ Features
 
-## Installation
+- 🎯 **Configurable Models** - Use your own custom models or extend the provided base model
+- 🔒 **Full Type Safety** - Complete TypeScript support with proper contracts and interfaces  
+- 📊 **Advanced Click Tracking** - Monitor usage with detailed analytics support
+- 🎛️ **Flexible Configuration** - Customize domains, paths, protocols, and behavior
+- 🚀 **Production Ready** - Built for scale with proper caching and optimization
+- 🔧 **Auto Setup** - One command installation with automated stub generation
+- 🔗 **Custom Slugs** - Support for both auto-generated and custom slugs
+- 🗄️ **Database Agnostic** - Works with any Lucid-supported database
+- 📱 **Framework Integration** - Deep AdonisJS integration with IoC container support
+
+## 📦 Installation
+
+Install the package via npm:
 
 ```bash
 npm install @mixxtor/adonisjs-shortlink
 ```
 
-## Setup
+### 🚀 Quick Setup (Recommended)
 
-### 1. Configure Provider
+The package includes an automated setup command that handles everything for you:
+
+```bash
+node ace configure @mixxtor/adonisjs-shortlink
+```
+
+This command will automatically:
+- ✅ Create the configuration file at `config/shortlink.ts`
+- ✅ Generate the `Shortlink` model with proper typing
+- ✅ Create and run the database migration
+- ✅ Register the service provider in `adonisrc.ts`
+- ✅ Setup environment variables template
+
+### 🔧 Manual Setup (Advanced)
+
+If you prefer manual setup or need custom configuration:
+
+#### 1. Add Provider
 
 Add the provider to your `adonisrc.ts`:
 
@@ -30,21 +57,24 @@ Add the provider to your `adonisrc.ts`:
 {
   providers: [
     // ... other providers
-    () => import('@mixxtor/adonisjs-shortlink/shortlink_provider'),
+    () => import('@mixxtor/adonisjs-shortlink/providers/shortlink_provider')
   ]
 }
 ```
 
-### 2. Create Configuration File
+#### 2. Create Configuration
 
-Create `config/shortlink.ts`:
+Create `config/shortlink.ts` with configurable model support:
 
 ```typescript
 import env from '#start/env'
 import { defineConfig } from '@mixxtor/adonisjs-shortlink'
+import Shortlink from '#models/shortlink'
 
 const shortlinkConfig = defineConfig({
-  domain: env.get('SHORT_DOMAIN'),
+  model: () => Shortlink, // 🎯 Configurable model
+  domain: env.get('SHORTLINK_DOMAIN'),
+  protocol: 'https',
   slugLength: 8,
   trackClicks: true,
   redirectStatusCode: 301,
@@ -53,18 +83,59 @@ const shortlinkConfig = defineConfig({
 export default shortlinkConfig
 ```
 
-### 3. Add Environment Variables
+#### 3. Environment Setup
 
 Add to your `.env` file:
 
 ```env
-SHORT_DOMAIN=short.yourdomain.com
+SHORTLINK_DOMAIN=short.yourdomain.com
+SHORT_PROTOCOL=https
+SHORT_SLUG_LENGTH=8
+SHORT_TRACK_CLICKS=true
+SHORT_REDIRECT_STATUS=301
 ```
 
-### 4. Create Migration
+#### 4. Create Model
 
-Create a new migration file `database/migrations/TIMESTAMP_create_shortlinks_table.ts`:
+Create `app/models/shortlink.ts` that implements the model contract:
 
+```typescript
+import { DateTime } from 'luxon'
+import { BaseModel, column } from '@adonisjs/lucid/orm'
+import type { ShortlinkModelContract } from '@mixxtor/adonisjs-shortlink/types'
+
+export default class Shortlink extends BaseModel implements ShortlinkModelContract {
+  @column({ isPrimary: true })
+  declare id: number
+
+  @column()
+  declare slug: string
+
+  @column()
+  declare originalUrl: string
+
+  @column()
+  declare clicks: number
+
+  @column()
+  declare metadata: Record<string, any> | null
+
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
+}
+```
+
+#### 5. Create Migration
+
+Create migration `database/migrations/TIMESTAMP_create_shortlinks_table.ts`:
+```bash
+node ace make:migration create_shortlinks_table
+```
+
+Migration content:
 ```typescript
 import { BaseSchema } from '@adonisjs/lucid/schema'
 
@@ -90,258 +161,418 @@ export default class extends BaseSchema {
 }
 ```
 
-### 5. Run Migration
+#### 6. Run Migration
 
 ```bash
 node ace migration:run
 ```
 
-## Usage
+## 📖 Usage
 
-### Basic Usage
+### Type-Safe Service Injection
+
+The service is automatically injected into the IoC container with full type safety:
 
 ```typescript
+import type { ShortlinkService } from '@mixxtor/adonisjs-shortlink/types'
 import shortlinkService from '@mixxtor/adonisjs-shortlink/services/main'
-import shortlinkConfig from '#config/shortlink'
 
-// Create a shortlink
+export default class SomeController {
+  async someMethod({ app }: HttpContext) {    
+    // Now you have full type safety and intellisense
+    const shortlink = await shortlinkService.create(
+      'https://example.com/very-long-url',
+      {
+        slug: 'custom-slug' // Optional
+      }
+    )
+  }
+}
+```
+
+### 🔗 Creating Shortlinks
+
+```typescript
+// Basic shortlink creation
 const shortlink = await shortlinkService.create('https://example.com/very/long/url')
 console.log(shortlinkService.getShortUrl(shortlink.slug))
 // Output: https://short.yourdomain.com/aBcD1234
-```
 
-### With Custom Slug
-
-```typescript
-const shortlink = await shortlinkService.create(
+// With custom slug
+const customShortlink = await shortlinkService.create(
   'https://example.com/sale',
-  'summer-sale' // Custom slug
+  { slug: 'summer-sale' }
 )
 // Output: https://short.yourdomain.com/summer-sale
+
+// Avoid duplicates - returns existing if URL already shortened
+const existing = await shortlinkService.getOrCreate('https://example.com/url')
 ```
 
-### Get or Create (Avoid Duplicates)
+### 🚀 Controller Integration
+
+Create a dedicated controller `app/controllers/shortlinks_controller.ts`:
 
 ```typescript
-// Returns existing shortlink if URL already exists
-const shortlink = await shortlinkService.getOrCreate('https://example.com/url')
-```
+import type { HttpContext } from '@adonisjs/core/http'
+import shortlinkService from '@mixxtor/adonisjs-shortlink/services/main'
 
-### With Metadata
+export default class ShortlinksController {
+  /**
+   * Create a new shortlink
+   */
+  async create({ request, response, app }: HttpContext) {
+    const { url, slug, metadata } = request.only(['url', 'slug', 'metadata'])
+    
+    try {
+      const shortlink = await shortlinkService.create(url, { slug, metadata })
+      
+      return response.created({
+        success: true,
+        data: {
+          slug: shortlink.slug,
+          shortUrl: shortlinkService.getShortUrl(shortlink.slug),
+          originalUrl: shortlink.originalUrl,
+          clicks: shortlink.clicks,
+          createdAt: shortlink.createdAt
+        }
+      })
+    } catch (error) {
+      return response.badRequest({
+        success: false,
+        message: error.message
+      })
+    }
+  }
 
-```typescript
-const shortlink = await shortlinkService.create('https://example.com/product', undefined, {
-  campaign: 'Black Friday',
-  source: 'email',
-})
-```
+  /**
+   * Redirect to original URL and track click
+   */
+  async redirect({ params, response, app }: HttpContext) {
+    const { slug } = params
+    
+    const shortlink = await shortlinkService.getBySlug(slug)
+    
+    if (!shortlink) {
+      return response.notFound('Shortlink not found')
+    }
 
-### Controller Usage
-
-Create a controller `app/controllers/shortlink_controller.ts`:
-
-```typescript
-import { inject } from '@adonisjs/core'
-import { HttpContext } from '@adonisjs/core/http'
-import { ShortlinkController as BaseController } from '@mixxtor/adonisjs-shortlink'
-import shortlinkConfig from '#config/shortlink'
-
-@inject()
-export default class ShortlinkController extends BaseController {
-  constructor() {
-    super(shortlinkConfig)
+    // Increment click count
+    await shortlink.incrementClicks(slug)
+    
+    return response.redirect(shortlink.originalUrl, true, 301)
   }
 }
 ```
 
-### Routes
+### 🛣️ Routes Setup
 
-Add routes in `start/routes.ts`:
+Add routes to your `start/routes.ts`:
 
 ```typescript
 import router from '@adonisjs/core/services/router'
+const ShortlinkController = () => import('#controllers/shortlinks_controller')
 
-const ShortlinkController = () => import('#controllers/shortlink_controller')
+// API routes for creating shortlinks
+router.group(() => {
+  router.post('/shortlinks', [ShortlinkController, 'create'])
+  router.get('/shortlinks/:slug/stats', [ShortlinkController, 'stats']) // Optional analytics endpoint
+}).prefix('/api')
 
-// Main redirect route
-router.get('/:slug', [ShortlinkController, 'redirect']).as('shortlink.redirect')
-
-// API routes (optional)
-router
-  .group(() => {
-    router.post('/shortlinks', [ShortlinkController, 'store']).as('shortlink.store')
-    router.get('/shortlinks/:slug/stats', [ShortlinkController, 'show']).as('shortlink.show')
-    router.delete('/shortlinks/:slug', [ShortlinkController, 'destroy']).as('shortlink.destroy')
-  })
-  .prefix('/api')
+// Redirect routes (should be on your short domain)
+router.get('/:slug', [ShortlinkController, 'redirect'])
 ```
 
-## API Reference
+For production, you'll typically want the redirect route on a separate short domain:
 
-### ShortlinkService
-
-#### `create(originalUrl, customSlug?, metadata?)`
-
-Create a new shortlink.
-
+**Short Domain Routes** (`short.yourdomain.com`):
 ```typescript
-const shortlink = await shortlinkService.create(
-  'https://example.com/url',
-  'custom-slug', // Optional
-  { key: 'value' } // Optional
-)
+// Only redirect functionality
+router.get('/:slug', [ShortlinkController, 'redirect']).domain('short.yourdomain.com')
 ```
 
-#### `getBySlug(slug)`
-
-Get shortlink by slug.
-
+**Main Application Routes**:
 ```typescript
-const shortlink = await shortlinkService.getBySlug('aBcD1234')
+// API and management routes
+router.group(() => {
+  router.post('/shortlinks', [ShortlinkController, 'create'])
+  router.get('/shortlinks/:slug/analytics', [ShortlinkController, 'analytics']) // implement by yourself
+}).prefix('/api').middleware('auth') // Add authentication as needed
 ```
 
-#### `getByOriginalUrl(url)`
+## ⚙️ Configuration
 
-Get shortlink by original URL.
+### Full Configuration Options
+
+The configuration supports flexible model injection and extensive customization:
 
 ```typescript
-const shortlink = await shortlinkService.getByOriginalUrl('https://example.com/url')
+import { defineConfig } from '@mixxtor/adonisjs-shortlink'
+import Shortlink from '#models/shortlink'
+
+const shortlinkConfig = defineConfig({
+  /**
+   * 🎯 Model Configuration (New!)
+   * Specify which model to use - allows for complete customization
+   */
+  model: () => Shortlink, // or () => import('#models/shortlink')
+
+  /**
+   * 🌐 Domain Settings
+   */
+  domain: env.get('SHORTLINK_DOMAIN', 'short.yourdomain.com'),
+  protocol: 'https', // 'http' | 'https'
+
+  /**
+   * 🔗 Slug Generation
+   */
+  slugLength: 8, // Length for auto-generated slugs
+  slugCharacters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
+
+  /**
+   * 📊 Analytics & Tracking
+   */
+  trackClicks: true, // Enable/disable click tracking
+  
+  /**
+   * 🚀 Redirect Behavior
+   */
+  redirectStatusCode: 301, // 301 (permanent) | 302 (temporary)
+})
+
+export default shortlinkConfig
 ```
 
-#### `getOrCreate(originalUrl, metadata?)`
+### 🔧 Custom Model Implementation
 
-Get existing or create new shortlink.
-
-```typescript
-const shortlink = await shortlinkService.getOrCreate('https://example.com/url')
-```
-
-#### `delete(slug)`
-
-Delete a shortlink.
+You can use your own model by implementing the `ShortlinkModelContract`:
 
 ```typescript
-const deleted = await shortlinkService.delete('aBcD1234')
-```
+import { DateTime } from 'luxon'
+import { BaseModel, column, belongsTo } from '@adonisjs/lucid/orm'
+import type { BelongsTo } from '@adonisjs/lucid/types/relations'
+import type { ShortlinkModelContract } from '@mixxtor/adonisjs-shortlink/types'
+import User from './user.js'
 
-#### `getShortUrl(slug, domain?)`
-
-Build full short URL.
-
-```typescript
-const url = shortlinkService.getShortUrl('aBcD1234')
-// Returns: https://short.yourdomain.com/aBcD1234
-```
-
-## Configuration Options
-
-| Option               | Type         | Default        | Description               |
-| -------------------- | ------------ | -------------- | ------------------------- |
-| `domain`             | `string`     | **required**   | Short URL domain          |
-| `slugLength`         | `number`     | `8`            | Length of generated slugs |
-| `trackClicks`        | `boolean`    | `true`         | Enable click tracking     |
-| `redirectStatusCode` | `301 \| 302` | `301`          | HTTP redirect status      |
-| `connection`         | `string`     | `'pg'`         | Database connection       |
-| `tableName`          | `string`     | `'shortlinks'` | Database table name       |
-
-## Integrating with Models
-
-You can integrate shortlinks with your models using hooks:
-
-```typescript
-import { beforeSave, BaseModel } from '@adonisjs/lucid/orm'
-import shortlinkService from '@mixxtor/adonisjs-shortlink/services/main'
-import shortlinkConfig from '#config/shortlink'
-
-export default class Product extends BaseModel {
-  @column()
-  declare url: string
+export default class CustomShortlink extends BaseModel implements ShortlinkModelContract {
+  // Required fields from ShortlinkModelContract
+  @column({ isPrimary: true })
+  declare id: number
 
   @column()
-  declare shortUrl: string | null
+  declare slug: string
 
-  @beforeSave()
-  static async generateShortlink(product: Product) {
-    if (product.$isDirty('url') && product.url) {
-      const shortlink = await shortlinkService.getOrCreate(product.url)
-      product.shortUrl = service.getShortUrl(shortlink.slug)
-    }
+  @column()
+  declare originalUrl: string
+
+  @column()
+  declare clicks: number
+
+  @column()
+  declare metadata: Record<string, any> | null
+
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
+
+  // 🎯 Add your own custom fields!
+  @column()
+  declare userId: number | null
+
+  @column()
+  declare title: string | null
+
+  @column()
+  declare description: string | null
+
+  @column()
+  declare expiresAt: DateTime | null
+
+  @column()
+  declare isActive: boolean
+
+  // Custom relationships
+  @belongsTo(() => User)
+  declare user: BelongsTo<typeof User>
+
+  // Custom methods
+  get isExpired() {
+    return this.expiresAt && this.expiresAt < DateTime.now()
   }
 }
 ```
 
-## Production Setup
+### 🌍 Environment Variables
 
-For production deployment with a dedicated short domain:
+```env
+# Required
+SHORTLINK_DOMAIN=short.yourdomain.com
 
-### 1. DNS Configuration
-
-Create a DNS record:
-
+# Optional - with defaults
+SHORTLINK_PROTOCOL=https
+SHORTLINK_SLUG_LENGTH=8
+SHORTLINK_TRACK_CLICKS=true
+SHORTLINK_REDIRECT_STATUS=301
 ```
-Type: A or CNAME
-Name: short
-Value: your-server-ip or main-domain.com
-```
 
-### 2. Web Server Configuration
+## 📚 API Reference
 
-**Nginx Example:**
+### ShortlinkService Methods
 
-```nginx
-server {
-    listen 80;
-    listen 443 ssl;
-    server_name short.yourdomain.com;
+The service provides a clean, type-safe API:
 
-    ssl_certificate /path/to/cert.pem;
-    ssl_certificate_key /path/to/key.pem;
+```typescript
+interface ShortlinkService {
+  // Core Methods
+  create(originalUrl: string, slug?: string, metadata?: Record<string, any>): Promise<ShortlinkModelContract>
+  getBySlug(slug: string): Promise<ShortlinkModelContract | null>
+  getOrCreate(originalUrl: string, slug?: string, metadata?: Record<string, any>): Promise<ShortlinkModelContract>
 
-    location / {
-        proxy_pass http://localhost:3333;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-    }
+  // Utilities
+  getShortUrl(slug: string): string
+
+  // URL Generation
+  generateSlug(length?: number): string
 }
 ```
 
-### 3. SSL Certificate
-
-```bash
-sudo certbot --nginx -d short.yourdomain.com
-```
-
-## TypeScript Support
-
-The package includes full TypeScript definitions:
+### Configuration Interface
 
 ```typescript
-import type {
-  ShortlinkConfig,
-  ShortlinkAttributes,
-  CreateShortlinkPayload,
-  ShortlinkServiceContract,
-} from '@mixxtor/adonisjs-shortlink/types'
+interface ShortlinkConfig<Model extends LucidModel = LucidModel> {
+  model: () => Model & ShortlinkModelContract
+  domain: string
+  protocol?: 'http' | 'https'
+  slugLength?: number
+  slugCharacters?: string
+  trackClicks?: boolean
+  redirectStatusCode?: 301 | 302
+}
 ```
 
-## Testing
+### Model Contract
+
+```typescript
+interface ShortlinkModelContract {
+  id: number
+  slug: string
+  originalUrl: string
+  clicks: number
+  metadata: Record<string, any> | null
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+```
+
+## 🧪 Testing
+
+The package includes comprehensive tests. Run them with:
 
 ```bash
 npm test
 ```
 
-## License
+### Testing Your Implementation
 
-MIT License - see LICENSE file for details
+```typescript
+import { test } from '@japa/runner'
+import shortlinkService from '@mixxtor/adonisjs-shortlink/services/main'
 
-## Author
+test.group('Shortlink Service', () => {
+  test('creates shortlink successfully', async ({ assert, app }) => {    
+    const shortlink = await shortlinkService.create('https://example.com')
+    
+    assert.exists(shortlink.slug)
+    assert.equal(shortlink.originalUrl, 'https://example.com')
+    assert.equal(shortlink.clicks, 0)
+  })
 
-**Mixxtor**
+  test('prevents duplicate slugs', async ({ assert, app }) => {    
+    await shortlinkService.create('https://example.com', { slug: 'test' })
+    
+    await assert.rejects(
+      () => shortlinkService.create('https://other.com', { slug: 'test' }),
+      'Slug already exists'
+    )
+  })
+})
+```
 
-## Contributing
+## 🚀 Production Deployment
+
+### Domain Configuration
+
+For production, set up your short domain:
+
+1. **DNS Configuration**: Point your short domain to your application
+2. **SSL Certificate**: Ensure HTTPS is configured
+3. **Environment Variables**: Set `SHORTLINK_DOMAIN` and `SHORTLINK_PROTOCOL`
+
+### Multi-Domain Setup
+
+**Option 1: Same Application**
+```typescript
+// In your main application, handle both domains
+
+// Only serve redirect routes
+router.group(() => {
+  router.get('/:slug', '#controllers/shortlinks_controller.redirect')
+}).domain('short.yourdomain.com')
+
+// Serve full API and management routes
+router.group(() => {
+  router.post('/shortlinks', '#controllers/shortlinks_controller.create')
+  // ... other routes
+}).prefix('/api')
+
+```
+
+**Option 2: Separate Applications**
+- Main app handles shortlink creation API
+- Separate minimal app on short domain handles redirects only
+
+### Performance Optimization
+
+1. **Database Indexing**:
+```sql
+CREATE INDEX CONCURRENTLY idx_shortlinks_slug ON shortlinks(slug);
+CREATE INDEX CONCURRENTLY idx_shortlinks_original_url ON shortlinks(original_url);
+```
+
+2. **Caching**: Use `@adonisjs/cache` (installed by yourself) to store shortlinks:
+```typescript
+import cache from '@adonisjs/cache/services/main'
+import shortlinkService from '@mixxtor/adonisjs-shortlink/services/main'
+
+// In your main app
+const shortlink = shortlinkService.create(...)
+await cache.set<typeof shortlink>({ key: `shortlink:${shortlink.slug}`, value })
+
+// In your shortlink redirect route
+const cachedShortlink = await cache.getOrSet<typeof shortlink>({
+  key: `shortlink:${slug}`,
+  factory: () => shortlinkService.getBySlug(slug),
+})
+```
+
+3. **Database Connection Pooling**: Configure your database for high concurrent reads
+
+## 📄 License
+
+MIT License - see [LICENSE](./LICENSE) for details.
+
+## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
-## Support
+## 📞 Support
 
-For issues and feature requests, please use the [GitHub issues page](https://github.com/mixxtor/adonisjs-shortlink/issues).
+- 📚 [Documentation](https://github.com/mixxtor/adonisjs-shortlink)
+- 🐛 [Issues](https://github.com/mixxtor/adonisjs-shortlink/issues)
+<!-- - 💬 [Discussions](https://github.com/mixxtor/adonisjs-shortlink/discussions) -->
+
+---
+
+Built with ❤️ for the AdonisJS community

@@ -1,9 +1,11 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import ShortlinkService from '../services/shortlink_service.js'
-import type { ShortlinkConfig } from '../types.js'
+import type { ShortlinkConfig, ShortlinkModelContract } from '../types.js'
+import { inject } from '@adonisjs/fold'
 
+@inject()
 export default class ShortlinkController {
-  constructor(private config: ShortlinkConfig) { }
+  constructor(private config: ShortlinkConfig<ShortlinkModelContract>) { }
 
   /**
    * Redirect to original URL based on slug
@@ -64,7 +66,7 @@ export default class ShortlinkController {
    * Create a new shortlink (optional, for admin purposes)
    */
   async store({ request, response }: HttpContext) {
-    const { original_url, custom_slug, metadata } = request.only([
+    const { original_url, custom_slug: slug, metadata } = request.only([
       'original_url',
       'custom_slug',
       'metadata',
@@ -79,7 +81,7 @@ export default class ShortlinkController {
 
     try {
       const shortlinkService = new ShortlinkService(this.config)
-      const shortlink = await shortlinkService.create(original_url, custom_slug, metadata)
+      const shortlink = await shortlinkService.create(original_url, { slug, metadata })
       const shortUrl = shortlinkService.getShortUrl(shortlink.slug)
 
       return response.status(201).json({

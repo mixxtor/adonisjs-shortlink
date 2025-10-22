@@ -5,23 +5,41 @@
  */
 
 import { DateTime } from 'luxon'
-import { LucidModel } from '@adonisjs/lucid/types/model'
+import type { LucidModel } from '@adonisjs/lucid/types/model'
 
 /**
  * Configuration options for the shortlink service
  */
-export interface ShortlinkConfig {
+export interface ShortlinkConfig<Model extends LucidModel = LucidModel> {
   /**
    * The Lucid model to use for shortlink operations
    * @example () => import('#models/shortlink')
    */
-  model: () => Promise<{ default: LucidModel }> | LucidModel
+  model: () => Promise<{ default: Model }> | Model
+
+  /**
+   * Enable shortlink service
+   * @default true
+   */
+  enabled: boolean
 
   /**
    * The domain used for generating short URLs
    * @example 'short.domain.com'
    */
   domain: string
+
+  /**
+   * Use HTTPS protocol
+   * @default 'https'
+   */
+  protocol?: 'http' | 'https'
+
+  /**
+   * The base path for shortlinks
+   * @example '/s/'
+   */
+  path?: string
 
   /**
    * Length of randomly generated slugs
@@ -67,6 +85,13 @@ export interface ShortlinkAttributes {
   updated_at: DateTime
 }
 
+export interface ShortlinkCustomMethods {
+  incrementClicks?(): Promise<void>
+  delete(): Promise<void>
+}
+
+export type ShortlinkModelRow<Model extends ShortlinkModelContract = ShortlinkModelContract> = InstanceType<Model> & ShortlinkAttributes & ShortlinkCustomMethods
+
 /**
  * Create shortlink payload
  */
@@ -79,25 +104,18 @@ export interface CreateShortlinkPayload {
 /**
  * Base interface that any shortlink model should implement
  */
-export interface ShortlinkModelContract extends ShortlinkAttributes {
-  incrementClicks?(): Promise<void>
-  delete(): Promise<void>
-}
+export type ShortlinkModelContract = LucidModel & ShortlinkAttributes & ShortlinkCustomMethods
 
 /**
  * Shortlink service interface
  */
-export interface ShortlinkServiceContract {
-  create(
-    originalUrl: string,
-    customSlug?: string,
-    metadata?: Record<string, any>
-  ): Promise<ShortlinkModelContract>
-  getBySlug(slug: string): Promise<ShortlinkModelContract | null>
-  getByOriginalUrl(originalUrl: string): Promise<ShortlinkModelContract | null>
-  getOrCreate(originalUrl: string, metadata?: Record<string, any>): Promise<ShortlinkModelContract>
-  delete(slug: string): Promise<boolean>
-  getShortUrl(slug: string, domain?: string): string
+export interface ShortlinkServiceContract<Model extends ShortlinkModelContract = ShortlinkModelContract> {
+  create(originalUrl: Model['original_url'], data?: Partial<Pick<Model, 'slug' | 'metadata'>>): Promise<ShortlinkModelRow<Model>>
+  getBySlug(slug: Model['slug']): Promise<ShortlinkModelRow<Model> | null>
+  getByOriginalUrl(originalUrl: Model['original_url']): Promise<ShortlinkModelRow<Model> | null>
+  getOrCreate(originalUrl: Model['original_url'], data?: Partial<Pick<Model, 'slug' | 'metadata'>>): Promise<ShortlinkModelRow<Model>>
+  delete(slug: Model['id']): Promise<boolean>
+  getShortUrl(slug: Model['slug']): string | undefined
 }
 
 declare module '@adonisjs/core/types' {

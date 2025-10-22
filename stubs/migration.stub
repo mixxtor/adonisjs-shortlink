@@ -3,9 +3,10 @@
   exports({ to: app.migrationsPath(migrationFileName) })
 }}}
 import { BaseSchema } from '@adonisjs/lucid/schema'
+import Shortlink from '#models/shortlink'
 
 export default class extends BaseSchema {
-  protected tableName = 'shortlinks'
+  protected tableName = Shortlink.table
 
   async up() {
     this.schema.createTable(this.tableName, (table) => {
@@ -14,7 +15,7 @@ export default class extends BaseSchema {
       table.text('original_url').notNullable()
       table.integer('clicks').defaultTo(0).notNullable()
       table.jsonb('metadata').nullable()
-      
+
       table.timestamp('created_at', { useTz: true }).notNullable().defaultTo(this.now())
       table.timestamp('updated_at', { useTz: true }).notNullable().defaultTo(this.now())
     })

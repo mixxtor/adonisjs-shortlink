@@ -3,11 +3,12 @@
 }}}
 import { BaseModel, column, SnakeCaseNamingStrategy } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
+import shortlinkConfig from '#config/shortlink'
 
 export default class Shortlink extends BaseModel {
   static namingStrategy = new SnakeCaseNamingStrategy()
-  public static connection = 'pg'
-  public static table = 'shortlinks'
+  public static connection = shortlinkConfig.connection
+  public static table = shortlinkConfig.tableName
 
   @column({ isPrimary: true })
   declare id: number

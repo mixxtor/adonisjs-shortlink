@@ -44,10 +44,11 @@ export async function configure(command: Configure) {
    * Add environment variables
    */
   await codemods.defineEnvVariables({
-    SHORT_DOMAIN: 'short.domain.com',
-    SHORT_SLUG_LENGTH: '8',
-    SHORT_TRACK_CLICKS: 'true',
-    SHORT_REDIRECT_STATUS: '301',
+    SHORTLINK_ENABLED: true,
+    SHORTLINK_DOMAIN: 'short.domain.com',
+    SHORTLINK_SLUG_LENGTH: '8',
+    SHORTLINK_TRACK_CLICKS: true,
+    SHORTLINK_REDIRECT_STATUS_CODE: 301,
   })
 
   /**
@@ -56,10 +57,11 @@ export async function configure(command: Configure) {
   await codemods.defineEnvValidations({
     leadingComment: 'Shortlink configuration',
     variables: {
-      SHORT_DOMAIN: `Env.schema.string()`,
-      SHORT_SLUG_LENGTH: `Env.schema.number.optional()`,
-      SHORT_TRACK_CLICKS: `Env.schema.boolean.optional()`,
-      SHORT_REDIRECT_STATUS: `Env.schema.enum.optional(['301', '302'] as const)`,
+      SHORTLINK_ENABLED: `Env.schema.boolean.optional()`,
+      SHORTLINK_DOMAIN: `Env.schema.string()`,
+      SHORTLINK_SLUG_LENGTH: `Env.schema.number.optional()`,
+      SHORTLINK_TRACK_CLICKS: `Env.schema.boolean.optional()`,
+      SHORTLINK_REDIRECT_STATUS_CODE: `Env.schema.enum.optional(['301', '302'] as const)`,
     },
   })
 }

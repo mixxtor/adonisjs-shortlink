@@ -6,9 +6,7 @@ import type { ShortlinkConfig } from './types.js'
  */
 export function defineConfig(config: ShortlinkConfig): ShortlinkConfig {
   if (!config.model) {
-    throw new RuntimeException(
-      'Shortlink model is required. Please provide a model configuration.'
-    )
+    throw new RuntimeException('Shortlink model is required. Please provide a model configuration.')
   }
 
   if (!config.domain) {
@@ -19,6 +17,8 @@ export function defineConfig(config: ShortlinkConfig): ShortlinkConfig {
 
   return {
     model: config.model,
+    enabled: config.enabled ?? true,
+    protocol: config.protocol ?? 'https',
     domain: config.domain,
     slugLength: config.slugLength ?? 8,
     trackClicks: config.trackClicks ?? true,
