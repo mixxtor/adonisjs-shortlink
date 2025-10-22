@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 
 
+## [1.0.0-beta.4](https://github.com/mixxtor/adonisjs-shortlink/compare/v1.0.0-beta.3...v1.0.0-beta.4) (2025-10-22)
+
+### ✨ Features
+
+* Enhance shortlink service with improved configuration and type safety ([fae07c3](https://github.com/mixxtor/adonisjs-shortlink/commit/fae07c3959ebe32e0c511d9fb3ecd7554307d483))
+* update test command to use tsnode and add ESM hook for TypeScript execution ([d92639a](https://github.com/mixxtor/adonisjs-shortlink/commit/d92639a21a71c2be63d98bd86e4bac214345e6ac))
+
+### 🔧 Maintenance
+
+* update dependencies ([e746308](https://github.com/mixxtor/adonisjs-shortlink/commit/e746308469b9be83cbef395170eb477610ffda74))
+
 ## [1.0.0-beta.3](https://github.com/mixxtor/adonisjs-shortlink/compare/v1.0.0-beta.2...v1.0.0-beta.3) (2025-10-16)
 
 ### ✨ Features
