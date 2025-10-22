@@ -1,5 +1,4 @@
 import { randomBytes } from 'node:crypto'
-import logger from '@adonisjs/core/services/logger'
 import type { ShortlinkConfig, ShortlinkServiceContract, ShortlinkModelContract, ShortlinkModelRow } from '../types.js'
 
 export default class ShortlinkService<Model extends ShortlinkModelContract = ShortlinkModelContract> implements ShortlinkServiceContract<Model> {
@@ -77,7 +76,7 @@ export default class ShortlinkService<Model extends ShortlinkModelContract = Sho
         }
       }
     } catch (error) {
-      logger.error(error)
+      console.error(error)
     }
 
     // If still not unique after maxAttempts, use a longer slug

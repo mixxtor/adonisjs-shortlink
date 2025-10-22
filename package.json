@@ -22,7 +22,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "quick:test": "node --import=tsx --enable-source-maps bin/test.ts",
+    "quick:test": "node --import=./tsnode.esm.js --enable-source-maps bin/test.ts",
     "pretest": "npm run lint",
     "test": "c8 npm run quick:test",
     "prebuild": "npm run lint && npm run clean",
@@ -63,6 +63,7 @@
     "eslint": "^9.38.0",
     "prettier": "^3.6.2",
     "release-it": "^19.0.5",
+    "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.46.2"
   },
