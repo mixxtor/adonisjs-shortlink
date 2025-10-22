@@ -11,7 +11,7 @@ export function defineConfig(config: ShortlinkConfig): ShortlinkConfig {
 
   if (!config.domain) {
     throw new RuntimeException(
-      'Shortlink domain is required. Please set SHORT_DOMAIN in your environment.'
+      'Shortlink domain is required. Please set SHORTLINK_DOMAIN in your environment.'
     )
   }
 
@@ -20,6 +20,7 @@ export function defineConfig(config: ShortlinkConfig): ShortlinkConfig {
     enabled: config.enabled ?? true,
     protocol: config.protocol ?? 'https',
     domain: config.domain,
+    path: config.path ?? 's',
     slugLength: config.slugLength ?? 8,
     trackClicks: config.trackClicks ?? true,
     redirectStatusCode: config.redirectStatusCode ?? 301,

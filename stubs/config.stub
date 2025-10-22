@@ -15,6 +15,17 @@ const shortlinkConfig = defineConfig({
 
   /*
   |--------------------------------------------------------------------------
+  | Enable Shortlink Service
+  |--------------------------------------------------------------------------
+  |
+  | Whether the shortlink service is enabled. When disabled, the service
+  | will not process any shortlink operations.
+  |
+  */
+  enabled: env.get('SHORTLINK_ENABLED', true),
+
+  /*
+  |--------------------------------------------------------------------------
   | Short Domain
   |--------------------------------------------------------------------------
   |
@@ -24,7 +35,30 @@ const shortlinkConfig = defineConfig({
   | Example: short.domain.com, s.yourdomain.com, go.yourdomain.com
   |
   */
-  domain: env.get('SHORT_DOMAIN'),
+  domain: env.get('SHORTLINK_DOMAIN'),
+
+  /*
+  |--------------------------------------------------------------------------
+  | Protocol
+  |--------------------------------------------------------------------------
+  |
+  | The protocol to use for generating short URLs.
+  |
+  */
+  protocol: env.get('SHORTLINK_PROTOCOL', 'https'),
+
+  /*
+  |--------------------------------------------------------------------------
+  | Base Path
+  |--------------------------------------------------------------------------
+  |
+  | The base path for shortlinks. This will be appended to your domain
+  | to create the full shortlink URL structure.
+  |
+  | Example: With path 's', URLs will be: domain.com/s/slug
+  |
+  */
+  path: env.get('SHORTLINK_PATH', 's'),
 
   /*
   |--------------------------------------------------------------------------
@@ -35,7 +69,7 @@ const shortlinkConfig = defineConfig({
   | unique combinations but result in longer URLs.
   |
   */
-  slugLength: env.get('SHORT_SLUG_LENGTH', 8),
+  slugLength: env.get('SHORTLINK_SLUG_LENGTH', 8),
 
   /*
   |--------------------------------------------------------------------------
@@ -46,7 +80,7 @@ const shortlinkConfig = defineConfig({
   | increment the click counter in the database.
   |
   */
-  trackClicks: env.get('SHORT_TRACK_CLICKS', true),
+  trackClicks: env.get('SHORTLINK_TRACK_CLICKS', true),
 
   /*
   |--------------------------------------------------------------------------
@@ -58,7 +92,7 @@ const shortlinkConfig = defineConfig({
   | 302 = Temporary redirect (not cached)
   |
   */
-  redirectStatusCode: env.get('SHORT_REDIRECT_STATUS', 301),
+  redirectStatusCode: env.get('SHORTLINK_REDIRECT_STATUS', 301),
 
   /*
   |--------------------------------------------------------------------------
@@ -68,7 +102,7 @@ const shortlinkConfig = defineConfig({
   | The database connection to use for shortlinks
   |
   */
-  connection: env.get('SHORT_DB_CONNECTION', 'pg'),
+  connection: env.get('SHORTLINK_DB_CONNECTION', 'pg'),
 
   /*
   |--------------------------------------------------------------------------
@@ -78,7 +112,7 @@ const shortlinkConfig = defineConfig({
   | The database table name for shortlinks
   |
   */
-  tableName: env.get('SHORT_TABLE_NAME', 'shortlinks'),
+  tableName: env.get('SHORTLINK_TABLE_NAME', 'shortlinks'),
 })
 
 export default shortlinkConfig

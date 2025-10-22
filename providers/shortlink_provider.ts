@@ -1,6 +1,6 @@
 import type { ApplicationService } from '@adonisjs/core/types'
 import ShortlinkService from '../src/services/shortlink_service.js'
-import type { ShortlinkConfig, ShortlinkModelContract } from '../src/types.js'
+import type { ShortlinkConfig, ShortlinkModel } from '../src/types.js'
 
 /**
  * Shortlink provider to register the service with the IoC container
@@ -13,7 +13,7 @@ export default class ShortlinkProvider {
    */
   register() {
     this.app.container.singleton('shortlink', async () => {
-      const configProvider = this.app.config.get<ShortlinkConfig<ShortlinkModelContract>>('shortlink')
+      const configProvider = this.app.config.get<ShortlinkConfig<ShortlinkModel>>('shortlink')
       return new ShortlinkService(configProvider)
     })
   }

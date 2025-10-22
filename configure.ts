@@ -46,9 +46,13 @@ export async function configure(command: Configure) {
   await codemods.defineEnvVariables({
     SHORTLINK_ENABLED: true,
     SHORTLINK_DOMAIN: 'short.domain.com',
+    SHORTLINK_PROTOCOL: 'https',
+    SHORTLINK_PATH: 's',
     SHORTLINK_SLUG_LENGTH: '8',
     SHORTLINK_TRACK_CLICKS: true,
     SHORTLINK_REDIRECT_STATUS_CODE: 301,
+    SHORTLINK_DB_CONNECTION: 'pg',
+    SHORTLINK_TABLE_NAME: 'shortlinks',
   })
 
   /**
@@ -59,9 +63,13 @@ export async function configure(command: Configure) {
     variables: {
       SHORTLINK_ENABLED: `Env.schema.boolean.optional()`,
       SHORTLINK_DOMAIN: `Env.schema.string()`,
+      SHORTLINK_PROTOCOL: `Env.schema.enum.optional(['http', 'https'] as const)`,
+      SHORTLINK_PATH: `Env.schema.string.optional()`,
       SHORTLINK_SLUG_LENGTH: `Env.schema.number.optional()`,
       SHORTLINK_TRACK_CLICKS: `Env.schema.boolean.optional()`,
-      SHORTLINK_REDIRECT_STATUS_CODE: `Env.schema.enum.optional(['301', '302'] as const)`,
+      SHORTLINK_REDIRECT_STATUS_CODE: `Env.schema.enum.optional([301, 302] as const)`,
+      SHORTLINK_DB_CONNECTION: `Env.schema.string.optional()`,
+      SHORTLINK_TABLE_NAME: `Env.schema.string.optional()`,
     },
   })
 }

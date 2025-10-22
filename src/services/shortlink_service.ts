@@ -1,7 +1,14 @@
 import { randomBytes } from 'node:crypto'
-import type { ShortlinkConfig, ShortlinkServiceContract, ShortlinkModelContract, ShortlinkModelRow } from '../types.js'
+import type {
+  ShortlinkConfig,
+  ShortlinkServiceContract,
+  ShortlinkModel,
+  ShortlinkModelContract,
+} from '../types.js'
 
-export default class ShortlinkService<Model extends ShortlinkModelContract = ShortlinkModelContract> implements ShortlinkServiceContract<Model> {
+export default class ShortlinkService<Model extends ShortlinkModel = ShortlinkModel>
+  implements ShortlinkServiceContract<Model>
+{
   private model: Model | undefined
   private configModel: ShortlinkConfig<Model>['model']
   private baseUrl: string
@@ -66,11 +73,11 @@ export default class ShortlinkService<Model extends ShortlinkModelContract = Sho
    */
   private async generateUniqueSlug(maxAttempts: number = 3): Promise<string> {
     try {
-      const Model = await this.getModel()
+      const model = await this.getModel()
 
       for (let i = 0; i < maxAttempts; i++) {
         const slug = this.generateSlug()
-        const existing = await Model.query().where('slug', slug).first()
+        const existing = await model.query().where('slug', slug).first()
         if (!existing) {
           return slug
         }
@@ -88,7 +95,10 @@ export default class ShortlinkService<Model extends ShortlinkModelContract = Sho
    * @param {string} originalUrl - The original URL to be shortened.
    * @param {Object} data - The data to create the shortlink with.
    */
-  async create(originalUrl: Model['original_url'], data?: Partial<Pick<Model, 'slug' | 'metadata'>>): Promise<ShortlinkModelRow<Model>> {
+  async create(
+    originalUrl: Model['original_url'],
+    data?: Partial<Pick<Model, 'slug' | 'metadata'>>
+  ): Promise<ShortlinkModelContract<Model>> {
     const model = await this.getModel()
     let { slug, metadata } = data || {}
 
@@ -103,41 +113,48 @@ export default class ShortlinkService<Model extends ShortlinkModelContract = Sho
       slug = await this.generateUniqueSlug()
     }
 
-    const shortlink = await new model().merge({
-      slug: slug,
-      original_url: originalUrl,
-      clicks: 0,
-      metadata: metadata || null,
-    }).save()
+    const shortlink = await new model()
+      .merge({
+        slug: slug,
+        original_url: originalUrl,
+        clicks: 0,
+        metadata: metadata || null,
+      })
+      .save()
 
-    return shortlink as ShortlinkModelRow<Model>
+    return shortlink as ShortlinkModelContract<Model>
   }
 
   /**
    * Get shortlink by ID
    * @param {number} id - The ID of the shortlink.
    */
-  async getById(id: Model['id']): Promise<ShortlinkModelRow<Model> | null> {
+  async getById(id: Model['id']): Promise<ShortlinkModelContract<Model> | null> {
     const model = await this.getModel()
-    return await model.find(id) as ShortlinkModelRow<Model>
+    return (await model.find(id)) as ShortlinkModelContract<Model>
   }
 
   /**
    * Get shortlink by slug
    * @param {string} slug - The slug of the shortlink.
    */
-  async getBySlug(slug: Model['slug']): Promise<ShortlinkModelRow<Model> | null> {
+  async getBySlug(slug: Model['slug']): Promise<ShortlinkModelContract<Model> | null> {
     const model = await this.getModel()
-    return await model.query().where('slug', slug).first() as ShortlinkModelRow<Model>
+    return (await model.query().where('slug', slug).first()) as ShortlinkModelContract<Model>
   }
 
   /**
    * Get shortlink by original URL
    * @param {string} originalUrl - The original URL of the shortlink.
    */
-  async getByOriginalUrl(originalUrl: Model['original_url']): Promise<ShortlinkModelRow<Model> | null> {
-    const Model = await this.getModel()
-    return await Model.query().where('original_url', originalUrl).first() as ShortlinkModelRow<Model>
+  async getByOriginalUrl(
+    originalUrl: Model['original_url']
+  ): Promise<ShortlinkModelContract<Model> | null> {
+    const model = await this.getModel()
+    return (await model
+      .query()
+      .where('original_url', originalUrl)
+      .first()) as ShortlinkModelContract<Model>
   }
 
   /**
@@ -146,7 +163,7 @@ export default class ShortlinkService<Model extends ShortlinkModelContract = Sho
   async getOrCreate(
     originalUrl: string,
     data?: Partial<Pick<Model, 'slug' | 'metadata'>>
-  ): Promise<ShortlinkModelRow<Model>> {
+  ): Promise<ShortlinkModelContract<Model>> {
     const existing = await this.getByOriginalUrl(originalUrl)
     const { slug, metadata = existing?.metadata } = data || {}
 
@@ -218,22 +235,23 @@ export default class ShortlinkService<Model extends ShortlinkModelContract = Sho
    * @param {string} data.original_url - The original URL of the shortlink.
    * @param {string} data.slug - The slug of the shortlink.
    * @param {Object} data.metadata - The metadata of the shortlink.
-   * @returns {Promise<ShortlinkModelRow<Model> | null>} The updated or created shortlink.
+   * @returns {Promise<ShortlinkModelContract<Model> | null>} The updated or created shortlink.
    */
   async updateOrCreate(
     idOrOriginalUrl: Model['id'] | Model['original_url'],
     data: Pick<Model, 'original_url'> & Partial<Pick<Model, 'slug' | 'metadata'>>
-  ): Promise<ShortlinkModelRow<Model> | null> {
-    const existing = typeof idOrOriginalUrl === 'string'
-      ? (await this.getByOriginalUrl(idOrOriginalUrl))
-      : (await this.getById(idOrOriginalUrl))
+  ): Promise<ShortlinkModelContract<Model> | null> {
+    const existing =
+      typeof idOrOriginalUrl === 'string'
+        ? await this.getByOriginalUrl(idOrOriginalUrl)
+        : await this.getById(idOrOriginalUrl)
     const { original_url: originalUrl, slug, metadata = existing?.metadata } = data
 
     if (existing) {
       existing.original_url = originalUrl || existing.original_url
       existing.slug = slug || existing.slug
       data.metadata !== existing.metadata && (existing.metadata = metadata || existing.metadata)
-      existing.$isDirty && await existing.save()
+      existing.$isDirty && (await existing.save())
 
       return existing
     }

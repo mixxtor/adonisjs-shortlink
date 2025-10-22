@@ -90,7 +90,8 @@ export interface ShortlinkCustomMethods {
   delete(): Promise<void>
 }
 
-export type ShortlinkModelRow<Model extends ShortlinkModelContract = ShortlinkModelContract> = InstanceType<Model> & ShortlinkAttributes & ShortlinkCustomMethods
+export type ShortlinkModelContract<Model extends ShortlinkModel = ShortlinkModel> =
+  InstanceType<Model> & ShortlinkAttributes & ShortlinkCustomMethods
 
 /**
  * Create shortlink payload
@@ -104,18 +105,46 @@ export interface CreateShortlinkPayload {
 /**
  * Base interface that any shortlink model should implement
  */
-export type ShortlinkModelContract = LucidModel & ShortlinkAttributes & ShortlinkCustomMethods
+export type ShortlinkModel = LucidModel & ShortlinkAttributes & ShortlinkCustomMethods
 
 /**
  * Shortlink service interface
  */
-export interface ShortlinkServiceContract<Model extends ShortlinkModelContract = ShortlinkModelContract> {
-  create(originalUrl: Model['original_url'], data?: Partial<Pick<Model, 'slug' | 'metadata'>>): Promise<ShortlinkModelRow<Model>>
-  getBySlug(slug: Model['slug']): Promise<ShortlinkModelRow<Model> | null>
-  getByOriginalUrl(originalUrl: Model['original_url']): Promise<ShortlinkModelRow<Model> | null>
-  getOrCreate(originalUrl: Model['original_url'], data?: Partial<Pick<Model, 'slug' | 'metadata'>>): Promise<ShortlinkModelRow<Model>>
-  delete(slug: Model['id']): Promise<boolean>
+export interface ShortlinkServiceContract<Model extends ShortlinkModel = ShortlinkModel> {
+  // Core CRUD Methods
+  create(
+    originalUrl: Model['original_url'],
+    data?: Partial<Pick<Model, 'slug' | 'metadata'>>
+  ): Promise<ShortlinkModelContract<Model>>
+
+  getById(id: Model['id']): Promise<ShortlinkModelContract<Model> | null>
+
+  getBySlug(slug: Model['slug']): Promise<ShortlinkModelContract<Model> | null>
+
+  getByOriginalUrl(
+    originalUrl: Model['original_url']
+  ): Promise<ShortlinkModelContract<Model> | null>
+
+  getOrCreate(
+    originalUrl: Model['original_url'],
+    data?: Partial<Pick<Model, 'slug' | 'metadata'>>
+  ): Promise<ShortlinkModelContract<Model>>
+
+  // Delete Methods
+  delete(id: Model['id']): Promise<boolean>
+  deleteBySlug(slug: Model['slug']): Promise<boolean>
+
+  // Update Methods
+  updateOrCreate(
+    idOrOriginalUrl: Model['id'] | Model['original_url'],
+    data: Pick<Model, 'original_url'> & Partial<Pick<Model, 'slug' | 'metadata'>>
+  ): Promise<ShortlinkModelContract<Model> | null>
+
+  // Utility Methods
   getShortUrl(slug: Model['slug']): string | undefined
+  getSlugFromShortUrl(shortUrl: string | undefined): string | undefined
+  getBasePathUrl(path?: string): string
+  setBaseUrl(domain: string, protocol?: 'http' | 'https'): void
 }
 
 declare module '@adonisjs/core/types' {
