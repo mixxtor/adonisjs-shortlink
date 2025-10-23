@@ -16,12 +16,16 @@ export async function configure(command: Configure) {
   /**
    * Publish config file
    */
-  await codemods.makeUsingStub(stubsRoot, 'config/shortlink.stub', {})
+  await codemods.makeUsingStub(stubsRoot, 'config/shortlink.stub', {
+    fileName: 'shortlink.ts',
+  })
 
   /**
    * Publish model file
    */
-  await codemods.makeUsingStub(stubsRoot, 'models/shortlink.stub', {})
+  await codemods.makeUsingStub(stubsRoot, 'models/shortlink.stub', {
+    fileName: 'shortlink.ts',
+  })
 
   /**
    * Publish migration file
@@ -72,4 +76,43 @@ export async function configure(command: Configure) {
       SHORTLINK_TABLE_NAME: `Env.schema.string.optional()`,
     },
   })
+
+  /**
+   * Setup routes
+   */
+  const setupRoutes = await command.prompt.confirm('Do you want to generate shortlink routes?', {
+    default: true,
+  })
+
+  if (setupRoutes) {
+    // Create custom controller
+    await codemods.makeUsingStub(stubsRoot, 'controllers/shortlink_controller.stub', {
+      fileName: 'shortlink_controller.ts',
+    })
+    
+    // Create routes with custom controller
+    await codemods.makeUsingStub(stubsRoot, 'routes/shortlink.stub', {
+      fileName: 'shortlinks.ts',
+    })
+
+    // Show setup instructions
+    command.logger.info('')
+    command.logger.success('✅ Routes generated successfully!')
+    command.logger.info('')
+    command.logger.info('📋 Next steps:')
+    command.logger.info('1. Run "node ace migration:run" to create the shortlinks table')
+    command.logger.info('2. Update your .env file with the SHORTLINK_DOMAIN')
+    command.logger.info('3. Include the routes in your main routes file:')
+    command.logger.info('')
+    command.logger.info('   In start/routes.ts add:')
+    command.logger.info('   import "./shortlinks.js"')
+    command.logger.info('')
+    command.logger.info('4. Your shortlinks will be available at: GET /{config.shortlink.path}/:slug')
+    command.logger.info('5. Customize the generated controller as needed')
+    command.logger.info('')
+    command.logger.info('🔗 Example usage:')
+    command.logger.info('   const shortlinkService = await app.container.make("shortlink")')
+    command.logger.info('   const link = await shortlinkService.create("https://example.com")')
+    command.logger.info('   console.log(shortlinkService.getShortUrl(link.slug))')
+  }
 }

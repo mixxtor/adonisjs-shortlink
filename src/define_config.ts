@@ -20,7 +20,7 @@ export function defineConfig(config: ShortlinkConfig): ShortlinkConfig {
     enabled: config.enabled ?? true,
     protocol: config.protocol ?? 'https',
     domain: config.domain,
-    path: config.path ?? 's',
+    path: config.path,
     slugLength: config.slugLength ?? 8,
     trackClicks: config.trackClicks ?? true,
     redirectStatusCode: config.redirectStatusCode ?? 301,

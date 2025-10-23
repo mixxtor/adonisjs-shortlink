@@ -1,5 +1,5 @@
 {{{
-  exports({ to: app.modelsPath('shortlink.ts') })
+  exports({ to: app.modelsPath(fileName) })
 }}}
 import { BaseModel, column, SnakeCaseNamingStrategy } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'

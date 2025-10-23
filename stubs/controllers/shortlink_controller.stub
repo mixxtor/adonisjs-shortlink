@@ -1,20 +1,31 @@
+{{#var entity = generators.createEntity('shortlink')}}
+{{#var singular = true }}
+{{#var controllerName = generators.controllerName(entity.name, singular)}}
+{{#var controllerFileName = generators.controllerFileName(entity.name, singular)}}
+{{{
+  exports({ to: app.httpControllersPath(entity.path, controllerFileName) })
+}}}
 import type { HttpContext } from '@adonisjs/core/http'
-import app from '@adonisjs/core/services/app'
+import shortlinkService from '@mixxtor/adonisjs-shortlink/services/main'
 
-export default class ShortlinkController {
+/**
+ * Shortlink controller
+ * 
+ * Handles shortlink redirects and optional API endpoints
+ */
+export default class {{ controllerName }} {
   /**
    * Redirect to original URL based on slug
    */
   async redirect({ params, response }: HttpContext) {
     const { slug } = params
 
-    const shortlinkService = await app.container.make('shortlink')
     const shortlink = await shortlinkService.getBySlug(slug)
 
     if (!shortlink) {
       return response.status(404).send({
         error: 'Shortlink not found',
-        message: `The shortlink "${slug}" does not exist`,
+        message: {{{ '`The shortlink "${slug}" does not exist`' }}},
       })
     }
 
@@ -40,13 +51,12 @@ export default class ShortlinkController {
   async show({ params, response }: HttpContext) {
     const { slug } = params
 
-    const shortlinkService = await app.container.make('shortlink')
     const shortlink = await shortlinkService.getBySlug(slug)
 
     if (!shortlink) {
       return response.status(404).send({
         error: 'Shortlink not found',
-        message: `The shortlink "${slug}" does not exist`,
+        message: {{{ '`The shortlink "${slug}" does not exist`' }}},
       })
     }
 
@@ -77,7 +87,6 @@ export default class ShortlinkController {
     }
 
     try {
-      const shortlinkService = await app.container.make('shortlink')
       const shortlink = await shortlinkService.create(original_url, { slug, metadata })
       const shortUrl = shortlinkService.getShortUrl(shortlink.slug)
 
@@ -104,12 +113,12 @@ export default class ShortlinkController {
   async destroy({ params, response }: HttpContext) {
     const { slug } = params
 
-    const shortlinkService = await app.container.make('shortlink')
-    const deleted = await shortlinkService.delete(slug)
+    const deleted = await shortlinkService.deleteBySlug(slug)
+
     if (!deleted) {
       return response.status(404).send({
         error: 'Shortlink not found',
-        message: `The shortlink "${slug}" does not exist`,
+        message: {{{ '`The shortlink "${slug}" does not exist`' }}},
       })
     }
 

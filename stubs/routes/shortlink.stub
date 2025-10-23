@@ -1,0 +1,28 @@
+{{{
+  exports({ to: app.startPath(fileName) })
+}}}
+/**
+ * Shortlink routes
+ *
+ * Include this file in your main routes file to enable shortlink functionality
+ *
+ * Usage in start/routes.ts:
+ *   import './shortlinks.js'
+ */
+
+import router from '@adonisjs/core/services/router'
+import shortlinkConfig from '@config/shortlink'
+
+const ShortlinkController = () => import('#controllers/shortlink_controller')
+
+/**
+ * Shortlink redirect route
+ */
+router.get('/:slug', [ShortlinkController, 'redirect']).as('shortlink.redirect').prefix(shortlinkConfig.path)
+
+/**
+ * API routes for shortlink management
+ */
+router.get('/api/shortlinks/:slug', [ShortlinkController, 'show']).as('shortlink.show')
+router.post('/api/shortlinks', [ShortlinkController, 'store']).as('shortlink.store')
+router.delete('/api/shortlinks/:slug', [ShortlinkController, 'destroy']).as('shortlink.destroy')

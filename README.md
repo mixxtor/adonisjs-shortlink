@@ -355,43 +355,48 @@ export default class ShortlinksController {
 
 ### 🛣️ Routes Setup
 
-Add routes to your `start/routes.ts`:
+When you run `node ace add @mixxtor/adonisjs-shortlink`, the package will automatically:
+
+1. **Generate route files** for you to include in your application
+2. **Choose controller type**: Use the built-in package controller or generate a custom one
+
+**Include the generated routes in your `start/routes.ts`:**
 
 ```typescript
+import './shortlinks.js'  // Include generated shortlink routes
+```
+
+The generated routes file includes:
+
+```typescript
+// Generated start/routes/shortlinks.ts
 import router from '@adonisjs/core/services/router'
 const ShortlinkController = () => import('#controllers/shortlink_controller')
 
-// API routes for creating and managing shortlinks
-router
-  .group(() => {
-    router.post('/shortlinks', [ShortlinkController, 'create'])
-    router.get('/shortlinks/:slug', [ShortlinkController, 'show']) // Get shortlink stats
-  })
-  .prefix('/api')
+// Main redirect route
+router.get('/:slug', [ShortlinkController, 'redirect']).as('shortlink.redirect')
 
-// Redirect routes (should be on your short domain)
-router.get('/:slug', [ShortlinkController, 'redirect'])
+// Optional API endpoints (uncomment if needed)
+router.get('/api/shortlinks/:slug', [ShortlinkController, 'show']).as('shortlink.show')
+router.post('/api/shortlinks', [ShortlinkController, 'store']).as('shortlink.store')
+router.delete('/api/shortlinks/:slug', [ShortlinkController, 'destroy']).as('shortlink.destroy')
 ```
 
-For production, you'll typically want the redirect route on a separate short domain:
+#### Production Setup with Custom Domain
 
-**Short Domain Routes** (`short.yourdomain.com`):
+For production, use a separate short domain for redirects:
 
 ```typescript
-// Only redirect functionality on short domain
+// Only redirect functionality on short domain (short.yourdomain.com)
 router.get('/:slug', [ShortlinkController, 'redirect']).domain('short.yourdomain.com')
-```
 
-**Main Application Routes**:
-
-```typescript
-// API and management routes on main domain
+// Main domain routes (yourdomain.com) 
 router
   .group(() => {
-    router.post('/shortlinks', [ShortlinkController, 'create'])
-    router.get('/shortlinks/:slug', [ShortlinkController, 'show']) // Get shortlink statistics
+    router.post('/api/shortlinks', [ShortlinkController, 'store'])
+    router.get('/api/shortlinks/:slug', [ShortlinkController, 'show'])
+    router.delete('/api/shortlinks/:slug', [ShortlinkController, 'destroy'])
   })
-  .prefix('/api')
   .middleware('auth') // Add authentication as needed
 ```
 

@@ -1,5 +1,5 @@
 {{{
-  exports({ to: app.configPath('shortlink.ts') })
+  exports({ to: app.configPath(fileName) })
 }}}
 import env from '#start/env'
 import { defineConfig } from '@mixxtor/adonisjs-shortlink'
@@ -61,7 +61,7 @@ const shortlinkConfig = defineConfig({
   | Example: With path 's', URLs will be: domain.com/s/slug
   |
   */
-  path: env.get('SHORTLINK_PATH', 's'),
+  path: env.get('SHORTLINK_PATH'),
 
   /*
   |--------------------------------------------------------------------------

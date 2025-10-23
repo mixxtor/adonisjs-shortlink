@@ -59,7 +59,7 @@ export default class ShortlinkService<Model extends ShortlinkModel = ShortlinkMo
    * @returns {string} The base URL with the path (if provided) for shortlinks.
    */
   getBasePathUrl(path = this.config.path): string {
-    return `${this.baseUrl}/${path?.endsWith('/') ? path : `${path}/`}`
+    return `${this.baseUrl}${path?.endsWith('/') ? (path.startsWith('/') ? path : `/${path}`) : `${path}/`}`
   }
 
   /**
