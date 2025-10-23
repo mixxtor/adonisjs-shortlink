@@ -1,5 +1,5 @@
 {{{
-  exports({ to: app.startPath(fileName) })
+  exports({ to: app.startPath(filePath, fileName) })
 }}}
 /**
  * Shortlink routes
@@ -11,18 +11,26 @@
  */
 
 import router from '@adonisjs/core/services/router'
-import shortlinkConfig from '@config/shortlink'
+import shortlinkConfig from '#config/shortlink'
 
 const ShortlinkController = () => import('#controllers/shortlink_controller')
 
 /**
- * Shortlink redirect route
- */
-router.get('/:slug', [ShortlinkController, 'redirect']).as('shortlink.redirect').prefix(shortlinkConfig.prefix)
+  * Shortlink redirect route
+  */
+router.get('/:slug', [ShortlinkController, 'redirect'])
+  .as('shortlink.redirect')
+  .prefix(shortlinkConfig.prefix ?? '')
+  .domain(shortlinkConfig.domain)
+  .middleware([]) // add your middleware/throttler here
 
 /**
- * API routes for shortlink management
- */
-router.get('/api/shortlinks/:slug', [ShortlinkController, 'show']).as('shortlink.show')
-router.post('/api/shortlinks', [ShortlinkController, 'store']).as('shortlink.store')
-router.delete('/api/shortlinks/:slug', [ShortlinkController, 'destroy']).as('shortlink.destroy')
+  * API routes for shortlink management
+  */
+router.group(() => {
+  router.get('/shortlinks/:slug', [ShortlinkController, 'show']).as('shortlink.show')
+  router.post('/shortlinks', [ShortlinkController, 'store']).as('shortlink.store')
+  router.delete('/shortlinks/:slug', [ShortlinkController, 'destroy']).as('shortlink.destroy')
+})
+  .prefix('api')
+  .middleware([]) // add your middleware/throttler here
