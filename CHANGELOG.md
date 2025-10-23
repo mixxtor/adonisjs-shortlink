@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 
 
+## [1.0.0-beta.7](https://github.com/mixxtor/adonisjs-shortlink/compare/v1.0.0-beta.6...v1.0.0-beta.7) (2025-10-23)
+
+### ✨ Features
+
+* Enhance shortlink package with route generation, controller setup, and configuration improvements ([749880b](https://github.com/mixxtor/adonisjs-shortlink/commit/749880bda3d3b53b9016e3000820aa5e9ba60548))
+* **refactor:** Refactor shortlink service and controller for improved configuration handling and dependency injection ([bae6fa6](https://github.com/mixxtor/adonisjs-shortlink/commit/bae6fa640001a8a6dc8ec92412890eeddcb7ccc7))
+* **refactor:** Rename 'path' to 'prefix' in configuration and related components for clarity ([a5467ae](https://github.com/mixxtor/adonisjs-shortlink/commit/a5467ae13f63a0f9855fb0cb12b2a7a80b57a36d))
+
 ## [1.0.0-beta.6](https://github.com/mixxtor/adonisjs-shortlink/compare/v1.0.0-beta.5...v1.0.0-beta.6) (2025-10-23)
 
 ### ✨ Features
