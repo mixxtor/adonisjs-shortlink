@@ -18,7 +18,7 @@ const ShortlinkController = () => import('#controllers/shortlink_controller')
 /**
  * Shortlink redirect route
  */
-router.get('/:slug', [ShortlinkController, 'redirect']).as('shortlink.redirect').prefix(shortlinkConfig.path)
+router.get('/:slug', [ShortlinkController, 'redirect']).as('shortlink.redirect').prefix(shortlinkConfig.prefix)
 
 /**
  * API routes for shortlink management

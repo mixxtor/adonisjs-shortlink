@@ -54,15 +54,21 @@ export default class ShortlinkService<Model extends ShortlinkModel = ShortlinkMo
   }
 
   /**
-   * Returns the base URL with the path (if provided) for shortlinks.
-   * The base URL is constructed by appending '/l/' to the short domain.
-   * @returns {string} The base URL with the path (if provided) for shortlinks.
+   * Returns the base URL with the prefix (if provided) for shortlinks.
+   * The base URL is constructed by appending the prefix to the short domain.
+   * @returns {string} The base URL with the prefix (if provided) for shortlinks.
    */
-  getBasePathUrl(path = this.config.path): string {
-    return `${this.baseUrl}${path?.endsWith('/') ? (path.startsWith('/') ? path : `/${path}`) : `${path}/`}`
-  }
+  getBasePathUrl(prefix = this.config.prefix): string {
+    if (!prefix) {
+      return `${this.baseUrl}/`
+    }
 
-  /**
+    // Ensure prefix starts with / and ends with /
+    const normalizedPrefix = prefix.startsWith('/') ? prefix : `/${prefix}`
+    const finalPrefix = normalizedPrefix.endsWith('/') ? normalizedPrefix : `${normalizedPrefix}/`
+
+    return `${this.baseUrl}${finalPrefix}`
+  }  /**
    * Generate a random unique slug
    * @param {number} length - The length of the slug.
    */

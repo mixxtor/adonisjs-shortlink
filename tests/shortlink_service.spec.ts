@@ -70,7 +70,7 @@ test.group('ShortlinkService', () => {
       enabled: true,
       domain: 'short.test.com',
       protocol: 'https',
-      path: 's',
+      prefix: 's',
       slugLength: 8,
       trackClicks: true,
       redirectStatusCode: 301 as const,
@@ -100,7 +100,7 @@ test.group('ShortlinkService', () => {
       enabled: true,
       domain: 'short.test.com',
       protocol: 'https',
-      path: 's',
+      prefix: 's',
       slugLength: 8,
       trackClicks: true,
       redirectStatusCode: 301 as const,
@@ -110,8 +110,8 @@ test.group('ShortlinkService', () => {
     const basePathUrl = service.getBasePathUrl()
     assert.equal(basePathUrl, 'https://short.test.com/s/')
 
-    const customPathUrl = service.getBasePathUrl('custom')
-    assert.equal(customPathUrl, 'https://short.test.com/custom/')
+    const customPrefixUrl = service.getBasePathUrl('custom')
+    assert.equal(customPrefixUrl, 'https://short.test.com/custom/')
   })
 
   test('should generate correct short URL', ({ assert }) => {
@@ -130,7 +130,7 @@ test.group('ShortlinkService', () => {
       enabled: true,
       domain: 'short.test.com',
       protocol: 'https',
-      path: 's',
+      prefix: 's',
       slugLength: 8,
       trackClicks: true,
       redirectStatusCode: 301 as const,
@@ -157,7 +157,7 @@ test.group('ShortlinkService', () => {
       enabled: true,
       domain: 'short.test.com',
       protocol: 'https',
-      path: 's',
+      prefix: 's',
       slugLength: 8,
       trackClicks: true,
       redirectStatusCode: 301 as const,
@@ -187,7 +187,7 @@ test.group('ShortlinkService', () => {
       enabled: true,
       domain: 'short.test.com',
       protocol: 'https',
-      path: 's',
+      prefix: 's',
       slugLength: 8,
       trackClicks: true,
       redirectStatusCode: 301 as const,
@@ -214,7 +214,7 @@ test.group('ShortlinkService', () => {
       enabled: true,
       domain: 'short.test.com',
       protocol: 'https',
-      path: 's',
+      prefix: 's',
       slugLength: 12,
       trackClicks: true,
       redirectStatusCode: 301 as const,

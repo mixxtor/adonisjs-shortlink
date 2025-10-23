@@ -36,10 +36,10 @@ export interface ShortlinkConfig<Model extends LucidModel = LucidModel> {
   protocol?: 'http' | 'https'
 
   /**
-   * The base path for shortlinks
-   * @example '/s/'
+   * The URL prefix for shortlinks
+   * @example 's'
    */
-  path?: string
+  prefix?: string
 
   /**
    * Length of randomly generated slugs
@@ -145,7 +145,7 @@ export interface ShortlinkServiceContract<Model extends ShortlinkModel = Shortli
   // Utility Methods
   getShortUrl(slug: Model['slug']): string | undefined
   getSlugFromShortUrl(shortUrl: string | undefined): string | undefined
-  getBasePathUrl(path?: string): string
+  getBasePathUrl(prefix?: string): string
   setBaseUrl(domain: string, protocol?: 'http' | 'https'): void
 }
 

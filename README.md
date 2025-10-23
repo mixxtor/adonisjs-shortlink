@@ -15,8 +15,7 @@ A powerful, type-safe URL shortener service for AdonisJS v6 with configurable mo
 - 🎯 **Configurable Models** - Use your own custom models or extend the provided base model
 - 🔒 **Full Type Safety** - Complete TypeScript support with proper contracts and interfaces
 - 📊 **Advanced Click Tracking** - Monitor usage with detailed analytics support
-- 🎛️ **Flexible Configuration** - Customize domains, paths, protocols, and behavior
-- 🚀 **Production Ready** - Built for scale with proper caching and optimization
+- 🎛️ **Flexible Configuration** - Customize domains, URL prefixes, protocols, and behavior
 - 🔧 **Auto Setup** - One command installation with automated stub generation
 - 🔗 **Custom Slugs** - Support for both auto-generated and custom slugs
 - 🗄️ **Database Agnostic** - Works with any Lucid-supported database
@@ -77,7 +76,7 @@ const shortlinkConfig = defineConfig({
   enabled: true,
   domain: env.get('SHORTLINK_DOMAIN'),
   protocol: env.get('SHORTLINK_PROTOCOL', 'https'),
-  path: env.get('SHORTLINK_PATH', 's'),
+  prefix: env.get('SHORTLINK_PREFIX', 's'),
   slugLength: env.get('SHORTLINK_SLUG_LENGTH', 8),
   trackClicks: env.get('SHORTLINK_TRACK_CLICKS', true),
   redirectStatusCode: env.get('SHORTLINK_REDIRECT_STATUS_CODE', 301),
@@ -101,7 +100,7 @@ SHORTLINK_PROTOCOL=https
 SHORTLINK_SLUG_LENGTH=8
 SHORTLINK_TRACK_CLICKS=true
 SHORTLINK_REDIRECT_STATUS_CODE=301
-SHORTLINK_PATH=s
+SHORTLINK_PREFIX=s
 ```
 
 #### 4. Create Model
@@ -422,7 +421,7 @@ const shortlinkConfig = defineConfig({
   enabled: true, // Enable/disable the shortlink service
   domain: env.get('SHORTLINK_DOMAIN'), // Required: Short domain (e.g., 'short.domain.com')
   protocol: env.get('SHORTLINK_PROTOCOL', 'https'), // 'http' | 'https'
-  path: env.get('SHORTLINK_PATH', 's'), // Base path for URLs (e.g., '/s/' -> domain.com/s/slug)
+  prefix: env.get('SHORTLINK_PREFIX', 's'), // URL prefix for shortlinks (e.g., 's' -> domain.com/s/slug)
 
   /**
    * 🔗 Slug Generation
@@ -549,7 +548,7 @@ interface ShortlinkServiceContract<Model extends ShortlinkModel = ShortlinkModel
   // Utilities
   getShortUrl(slug: string): string | undefined
   getSlugFromShortUrl(shortUrl: string | undefined): string | undefined
-  getBasePathUrl(path?: string): string
+  getBasePathUrl(prefix?: string): string
 }
 ```
 
@@ -561,7 +560,7 @@ interface ShortlinkConfig<Model extends LucidModel = LucidModel> {
   enabled: boolean
   domain: string
   protocol?: 'http' | 'https'
-  path?: string
+  prefix?: string
   slugLength: number
   trackClicks: boolean
   redirectStatusCode: 301 | 302

@@ -52,16 +52,16 @@ const shortlinkConfig = defineConfig({
 
   /*
   |--------------------------------------------------------------------------
-  | Base Path
+  | URL Prefix
   |--------------------------------------------------------------------------
   |
-  | The base path for shortlinks. This will be appended to your domain
+  | The URL prefix for shortlinks. This will be appended to your domain
   | to create the full shortlink URL structure.
   |
-  | Example: With path 's', URLs will be: domain.com/s/slug
+  | Example: With prefix 's', URLs will be: domain.com/s/slug
   |
   */
-  path: env.get('SHORTLINK_PATH'),
+  prefix: env.get('SHORTLINK_PREFIX'),
 
   /*
   |--------------------------------------------------------------------------
