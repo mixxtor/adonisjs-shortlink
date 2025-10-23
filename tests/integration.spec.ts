@@ -12,6 +12,7 @@ test.group('Integration Tests', () => {
       slugLength: 8,
       trackClicks: true,
       redirectStatusCode: 301,
+      tableName: 'shortlinks',
     })
 
     assert.equal(config.domain, 'short.test.com')
@@ -35,6 +36,7 @@ test.group('Integration Tests', () => {
           slugLength: 8,
           trackClicks: true,
           redirectStatusCode: 301,
+          tableName: 'shortlinks',
         }),
       'Shortlink model is required. Please provide a model configuration.'
     )
@@ -52,6 +54,7 @@ test.group('Integration Tests', () => {
           slugLength: 8,
           trackClicks: true,
           redirectStatusCode: 301,
+          tableName: 'shortlinks',
         }),
       'Shortlink domain is required. Please set SHORTLINK_DOMAIN in your environment.'
     )

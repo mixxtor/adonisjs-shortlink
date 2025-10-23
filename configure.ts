@@ -26,7 +26,7 @@ export async function configure(command: Configure) {
   /**
    * Publish migration file
    */
-  await codemods.makeUsingStub(stubsRoot, 'migration.stub', {
+  await codemods.makeUsingStub(stubsRoot, 'migrations/shortlink.stub', {
     migration: {
       folder: 'database/migrations',
       fileName: `${new Date().getTime()}_create_shortlinks_table.ts`,

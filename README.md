@@ -80,7 +80,7 @@ const shortlinkConfig = defineConfig({
   path: env.get('SHORTLINK_PATH', 's'),
   slugLength: env.get('SHORTLINK_SLUG_LENGTH', 8),
   trackClicks: env.get('SHORTLINK_TRACK_CLICKS', true),
-  redirectStatusCode: env.get('SHORTLINK_REDIRECT_STATUS', 301),
+  redirectStatusCode: env.get('SHORTLINK_REDIRECT_STATUS_CODE', 301),
   connection: 'pg',
   tableName: 'shortlinks',
 })
@@ -100,7 +100,7 @@ SHORTLINK_DOMAIN=short.yourdomain.com
 SHORTLINK_PROTOCOL=https
 SHORTLINK_SLUG_LENGTH=8
 SHORTLINK_TRACK_CLICKS=true
-SHORTLINK_REDIRECT_STATUS=301
+SHORTLINK_REDIRECT_STATUS_CODE=301
 SHORTLINK_PATH=s
 ```
 
@@ -432,7 +432,7 @@ const shortlinkConfig = defineConfig({
   /**
    * 🚀 Redirect Behavior
    */
-  redirectStatusCode: env.get('SHORTLINK_REDIRECT_STATUS', 301), // 301 (permanent) | 302 (temporary)
+  redirectStatusCode: env.get('SHORTLINK_REDIRECT_STATUS_CODE', 301), // 301 (permanent) | 302 (temporary)
 
   /**
    * 🗄️ Database Settings

@@ -1,19 +1,28 @@
-{{{
-  exports({ to: app.configPath('shortlink.ts') })
-}}}
 import env from '#start/env'
 import { defineConfig } from '@mixxtor/adonisjs-shortlink'
 
 const shortlinkConfig = defineConfig({
   /*
   |--------------------------------------------------------------------------
-  | Shortlink Enabled
+  | Shortlink Model
   |--------------------------------------------------------------------------
   |
-  | Whether the shortlink service is enabled or not.
+  | The Lucid model to use for shortlink operations. This allows you to
+  | use a custom model or extend the package's default model.
   |
   */
-  enabled: Env.get('SHORTLINK_ENABLED', true),
+  model: () => import('#models/shortlink'),
+
+  /*
+  |--------------------------------------------------------------------------
+  | Enable Shortlink Service
+  |--------------------------------------------------------------------------
+  |
+  | Whether the shortlink service is enabled. When disabled, the service
+  | will not process any shortlink operations.
+  |
+  */
+  enabled: env.get('SHORTLINK_ENABLED', true),
 
   /*
   |--------------------------------------------------------------------------
@@ -26,7 +35,30 @@ const shortlinkConfig = defineConfig({
   | Example: short.domain.com, s.yourdomain.com, go.yourdomain.com
   |
   */
-  domain: env.get('SHORTLINK_DOMAIN', env.get('APP_URL', 'localhost')),
+  domain: env.get('SHORTLINK_DOMAIN'),
+
+  /*
+  |--------------------------------------------------------------------------
+  | Protocol
+  |--------------------------------------------------------------------------
+  |
+  | The protocol to use for generating short URLs.
+  |
+  */
+  protocol: env.get('SHORTLINK_PROTOCOL', 'https'),
+
+  /*
+  |--------------------------------------------------------------------------
+  | Base Path
+  |--------------------------------------------------------------------------
+  |
+  | The base path for shortlinks. This will be appended to your domain
+  | to create the full shortlink URL structure.
+  |
+  | Example: With path 's', URLs will be: domain.com/s/slug
+  |
+  */
+  path: env.get('SHORTLINK_PATH', 's'),
 
   /*
   |--------------------------------------------------------------------------
@@ -60,7 +92,7 @@ const shortlinkConfig = defineConfig({
   | 302 = Temporary redirect (not cached)
   |
   */
-  redirectStatusCode: env.get('SHORTLINK_REDIRECT_STATUS', 301),
+  redirectStatusCode: env.get('SHORTLINK_REDIRECT_STATUS_CODE', 301),
 
   /*
   |--------------------------------------------------------------------------

@@ -9,7 +9,7 @@ import shortlinkConfig from '#config/shortlink'
 export default class Shortlink extends BaseModel implements ShortlinkModelContract {
   static namingStrategy = new SnakeCaseNamingStrategy()
   public static connection = shortlinkConfig.connection
-  public static table = shortlinkConfig.tableName
+  public static table = shortlinkConfig.tableName ?? 'shortlinks'
 
   @column({ isPrimary: true })
   declare id: number

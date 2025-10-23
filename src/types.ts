@@ -15,7 +15,7 @@ export interface ShortlinkConfig<Model extends LucidModel = LucidModel> {
    * The Lucid model to use for shortlink operations
    * @example () => import('#models/shortlink')
    */
-  model: () => Promise<{ default: Model }> | Model
+  model: (() => Promise<{ default: Model }>) | Model
 
   /**
    * Enable shortlink service
@@ -69,7 +69,7 @@ export interface ShortlinkConfig<Model extends LucidModel = LucidModel> {
    * Table name for shortlinks
    * @default 'shortlinks'
    */
-  tableName?: string
+  tableName: string
 }
 
 /**

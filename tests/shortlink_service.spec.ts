@@ -20,6 +20,7 @@ test.group('ShortlinkService', () => {
       slugLength: 8,
       trackClicks: true,
       redirectStatusCode: 301 as const,
+      tableName: 'shortlinks',
     })
     const slug = service['generateSlug']()
 
@@ -45,6 +46,7 @@ test.group('ShortlinkService', () => {
       slugLength: 8,
       trackClicks: true,
       redirectStatusCode: 301 as const,
+      tableName: 'shortlinks',
     })
     const slug1 = service['generateSlug']()
     const slug2 = service['generateSlug']()
@@ -72,6 +74,7 @@ test.group('ShortlinkService', () => {
       slugLength: 8,
       trackClicks: true,
       redirectStatusCode: 301 as const,
+      tableName: 'shortlinks',
     })
 
     service.setBaseUrl('example.com', 'https')
@@ -101,6 +104,7 @@ test.group('ShortlinkService', () => {
       slugLength: 8,
       trackClicks: true,
       redirectStatusCode: 301 as const,
+      tableName: 'shortlinks',
     })
 
     const basePathUrl = service.getBasePathUrl()
@@ -130,6 +134,7 @@ test.group('ShortlinkService', () => {
       slugLength: 8,
       trackClicks: true,
       redirectStatusCode: 301 as const,
+      tableName: 'shortlinks',
     })
 
     const shortUrl = service.getShortUrl('test123')
@@ -156,6 +161,7 @@ test.group('ShortlinkService', () => {
       slugLength: 8,
       trackClicks: true,
       redirectStatusCode: 301 as const,
+      tableName: 'shortlinks',
     })
 
     const slug = service.getSlugFromShortUrl('https://short.test.com/s/test123')
@@ -185,6 +191,7 @@ test.group('ShortlinkService', () => {
       slugLength: 8,
       trackClicks: true,
       redirectStatusCode: 301 as const,
+      tableName: 'shortlinks',
     })
 
     const shortUrl = service.getShortUrl('')
@@ -211,6 +218,7 @@ test.group('ShortlinkService', () => {
       slugLength: 12,
       trackClicks: true,
       redirectStatusCode: 301 as const,
+      tableName: 'shortlinks',
     })
 
     const slug = service['generateSlug']()
@@ -225,6 +233,7 @@ test.group('ShortlinkService', () => {
       slugLength: 8,
       trackClicks: true,
       redirectStatusCode: 301 as const,
+      tableName: 'shortlinks',
     })
 
     await assert.rejects(() => service.getModel(), 'Shortlink model not configured')

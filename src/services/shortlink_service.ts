@@ -7,8 +7,7 @@ import type {
 } from '../types.js'
 
 export default class ShortlinkService<Model extends ShortlinkModel = ShortlinkModel>
-  implements ShortlinkServiceContract<Model>
-{
+  implements ShortlinkServiceContract<Model> {
   private model: Model | undefined
   private configModel: ShortlinkConfig<Model>['model']
   private baseUrl: string
@@ -39,8 +38,14 @@ export default class ShortlinkService<Model extends ShortlinkModel = ShortlinkMo
       return this.model
     }
 
-    const importedModel = await this.configModel()
-    this.model = 'default' in importedModel ? importedModel.default : importedModel
+    // Handle both function and direct model cases
+    if (typeof this.configModel === 'function') {
+      const importedModel = await (this.configModel as () => Promise<{ default: Model }>)()
+      this.model = 'default' in importedModel ? importedModel.default : importedModel
+    } else {
+      this.model = this.configModel
+    }
+
     return this.model
   }
 
