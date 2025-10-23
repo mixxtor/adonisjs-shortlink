@@ -1,5 +1,5 @@
 {{{
-  exports({ to: app.startPath(filePath, fileName) })
+  exports({ to: app.startPath(fileName) })
 }}}
 /**
  * Shortlink routes
