@@ -1,3 +1,6 @@
+{{{
+  exports({ to: app.configPath('shortlink.ts') })
+}}}
 import env from '#start/env'
 import { defineConfig } from '@mixxtor/adonisjs-shortlink'
 
@@ -102,7 +105,7 @@ const shortlinkConfig = defineConfig({
   | The database connection to use for shortlinks
   |
   */
-  connection: env.get('SHORTLINK_DB_CONNECTION', 'pg'),
+  connection: env.get('SHORTLINK_DB_CONNECTION', env.get('DB_CONNECTION', 'pg')),
 
   /*
   |--------------------------------------------------------------------------

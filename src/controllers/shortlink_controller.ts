@@ -1,19 +1,14 @@
 import type { HttpContext } from '@adonisjs/core/http'
-import ShortlinkService from '../services/shortlink_service.js'
-import type { ShortlinkConfig, ShortlinkModel } from '../types.js'
-import { inject } from '@adonisjs/fold'
+import app from '@adonisjs/core/services/app'
 
-@inject()
 export default class ShortlinkController {
-  constructor(private config: ShortlinkConfig<ShortlinkModel>) {}
-
   /**
    * Redirect to original URL based on slug
    */
   async redirect({ params, response }: HttpContext) {
     const { slug } = params
 
-    const shortlinkService = new ShortlinkService(this.config)
+    const shortlinkService = await app.container.make('shortlink')
     const shortlink = await shortlinkService.getBySlug(slug)
 
     if (!shortlink) {
@@ -23,8 +18,10 @@ export default class ShortlinkController {
       })
     }
 
+    const shortlinkConfig = shortlinkService.getConfig()
+
     // Increment click count in background (don't wait for it)
-    if (this.config.trackClicks) {
+    if (shortlinkConfig.trackClicks) {
       // Use type assertion or safe property access
       if (typeof shortlink.incrementClicks === 'function') {
         shortlink.incrementClicks().catch((error: Error) => {
@@ -34,7 +31,7 @@ export default class ShortlinkController {
     }
 
     // Redirect to original URL
-    return response.redirect(shortlink.original_url, true, this.config.redirectStatusCode)
+    return response.redirect(shortlink.original_url, true, shortlinkConfig.redirectStatusCode)
   }
 
   /**
@@ -43,7 +40,7 @@ export default class ShortlinkController {
   async show({ params, response }: HttpContext) {
     const { slug } = params
 
-    const shortlinkService = new ShortlinkService(this.config)
+    const shortlinkService = await app.container.make('shortlink')
     const shortlink = await shortlinkService.getBySlug(slug)
 
     if (!shortlink) {
@@ -80,7 +77,7 @@ export default class ShortlinkController {
     }
 
     try {
-      const shortlinkService = new ShortlinkService(this.config)
+      const shortlinkService = await app.container.make('shortlink')
       const shortlink = await shortlinkService.create(original_url, { slug, metadata })
       const shortUrl = shortlinkService.getShortUrl(shortlink.slug)
 
@@ -107,9 +104,8 @@ export default class ShortlinkController {
   async destroy({ params, response }: HttpContext) {
     const { slug } = params
 
-    const shortlinkService = new ShortlinkService(this.config)
+    const shortlinkService = await app.container.make('shortlink')
     const deleted = await shortlinkService.delete(slug)
-
     if (!deleted) {
       return response.status(404).send({
         error: 'Shortlink not found',

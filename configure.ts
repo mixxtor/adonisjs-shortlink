@@ -62,7 +62,7 @@ export async function configure(command: Configure) {
     leadingComment: 'Shortlink configuration',
     variables: {
       SHORTLINK_ENABLED: `Env.schema.boolean.optional()`,
-      SHORTLINK_DOMAIN: `Env.schema.string()`,
+      SHORTLINK_DOMAIN: `Env.schema.string({ format: 'host' })`,
       SHORTLINK_PROTOCOL: `Env.schema.enum.optional(['http', 'https'] as const)`,
       SHORTLINK_PATH: `Env.schema.string.optional()`,
       SHORTLINK_SLUG_LENGTH: `Env.schema.number.optional()`,

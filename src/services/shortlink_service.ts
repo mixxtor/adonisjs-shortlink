@@ -25,6 +25,10 @@ export default class ShortlinkService<Model extends ShortlinkModel = ShortlinkMo
     this.baseUrl = `${urls.protocol}//${urls.host}`
   }
 
+  getConfig(): ShortlinkConfig<Model> {
+    return this.config
+  }
+
   /**
    * Imports the model from the provider, returns and caches it
    * for further operations.

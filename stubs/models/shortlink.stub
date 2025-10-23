@@ -3,10 +3,9 @@
 }}}
 import { BaseModel, column, SnakeCaseNamingStrategy } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
-import type { ShortlinkModelContract } from '@mixxtor/adonisjs-shortlink/types'
 import shortlinkConfig from '#config/shortlink'
 
-export default class Shortlink extends BaseModel implements ShortlinkModelContract {
+export default class Shortlink extends BaseModel {
   static namingStrategy = new SnakeCaseNamingStrategy()
   public static connection = shortlinkConfig.connection
   public static table = shortlinkConfig.tableName ?? 'shortlinks'

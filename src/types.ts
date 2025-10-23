@@ -111,6 +111,8 @@ export type ShortlinkModel = LucidModel & ShortlinkAttributes & ShortlinkCustomM
  * Shortlink service interface
  */
 export interface ShortlinkServiceContract<Model extends ShortlinkModel = ShortlinkModel> {
+  getConfig(): ShortlinkConfig<Model>
+
   // Core CRUD Methods
   create(
     originalUrl: Model['original_url'],
