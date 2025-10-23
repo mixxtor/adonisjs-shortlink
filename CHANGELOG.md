@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 
 
+## [1.0.0](https://github.com/mixxtor/adonisjs-shortlink/compare/v1.0.0-beta.7...v1.0.0) (2025-10-23)
+
+### 🐛 Bug Fixes
+
+* Correct path argument in startPath and update import paths for consistency ([b8898ab](https://github.com/mixxtor/adonisjs-shortlink/commit/b8898ab9ebd325af00e23e5d0cc45ed70e6cb304))
+
 ## [1.0.0-beta.7](https://github.com/mixxtor/adonisjs-shortlink/compare/v1.0.0-beta.6...v1.0.0-beta.7) (2025-10-23)
 
 ### ✨ Features
