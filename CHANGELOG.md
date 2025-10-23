@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 
 
+## [1.1.0](https://github.com/mixxtor/adonisjs-shortlink/compare/v1.0.0...v1.1.0) (2025-10-23)
+
+### 🐛 Bug Fixes
+
+* Remove unnecessary path argument from startPath in shortlink.stub ([e7a0ccc](https://github.com/mixxtor/adonisjs-shortlink/commit/e7a0cccb110fac41825cf7561bef8651b8820e2e))
+
 ## [1.0.0](https://github.com/mixxtor/adonisjs-shortlink/compare/v1.0.0-beta.7...v1.0.0) (2025-10-23)
 
 ### 🐛 Bug Fixes
