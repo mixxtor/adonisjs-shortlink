@@ -145,8 +145,8 @@ export interface ShortlinkServiceContract<Model extends ShortlinkModel = Shortli
   // Utility Methods
   getShortUrl(slug: Model['slug']): string | undefined
   getSlugFromShortUrl(shortUrl: string | undefined): string | undefined
-  getBasePathUrl(prefix?: string): string
-  setBaseUrl(domain: string, protocol?: 'http' | 'https'): void
+  getBaseUrl(): string
+  setBaseUrl(domain: string, protocol?: 'http' | 'https', prefix?: string): void
 }
 
 declare module '@adonisjs/core/types' {

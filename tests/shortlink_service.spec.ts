@@ -107,11 +107,8 @@ test.group('ShortlinkService', () => {
       tableName: 'shortlinks',
     })
 
-    const basePathUrl = service.getBasePathUrl()
+    const basePathUrl = service.getBaseUrl()
     assert.equal(basePathUrl, 'https://short.test.com/s/')
-
-    const customPrefixUrl = service.getBasePathUrl('custom')
-    assert.equal(customPrefixUrl, 'https://short.test.com/custom/')
   })
 
   test('should generate correct short URL', ({ assert }) => {

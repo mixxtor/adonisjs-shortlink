@@ -548,7 +548,7 @@ interface ShortlinkServiceContract<Model extends ShortlinkModel = ShortlinkModel
   // Utilities
   getShortUrl(slug: string): string | undefined
   getSlugFromShortUrl(shortUrl: string | undefined): string | undefined
-  getBasePathUrl(prefix?: string): string
+  getBaseUrl(): string
 }
 ```
 

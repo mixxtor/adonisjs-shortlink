@@ -6,8 +6,7 @@ import type {
   ShortlinkModelContract,
 } from '../types.js'
 
-export default class ShortlinkService<Model extends ShortlinkModel = ShortlinkModel>
-  implements ShortlinkServiceContract<Model> {
+export default class ShortlinkService<Model extends ShortlinkModel = ShortlinkModel> implements ShortlinkServiceContract<Model> {
   private model: Model | undefined
   private configModel: ShortlinkConfig<Model>['model']
   private baseUrl: string
@@ -19,10 +18,16 @@ export default class ShortlinkService<Model extends ShortlinkModel = ShortlinkMo
     this.baseUrl = domain.startsWith('http') ? domain : `${protocol}://${domain}`
   }
 
-  setBaseUrl(domain: string, protocol: typeof this.config.protocol = 'https'): void {
+  setBaseUrl(domain: string, protocol: typeof this.config.protocol = 'https', prefix = this.config.prefix): void {
     const url = domain.startsWith('http') ? domain : `${protocol}://${domain}`
     const urls = new URL(url)
     this.baseUrl = `${urls.protocol}//${urls.host}`
+
+    // Ensure prefix starts with / and ends without /
+    const normalizedPrefix = prefix?.startsWith('/') ? prefix : `/${prefix}`
+    const finalPrefix = normalizedPrefix.endsWith('/') ? normalizedPrefix : `${normalizedPrefix}/`
+
+    this.baseUrl = `${this.baseUrl}${finalPrefix}`
   }
 
   getConfig(): ShortlinkConfig<Model> {
@@ -58,17 +63,11 @@ export default class ShortlinkService<Model extends ShortlinkModel = ShortlinkMo
    * The base URL is constructed by appending the prefix to the short domain.
    * @returns {string} The base URL with the prefix (if provided) for shortlinks.
    */
-  getBasePathUrl(prefix = this.config.prefix): string {
-    if (!prefix) {
-      return `${this.baseUrl}/`
-    }
+  getBaseUrl(): string {
+    return this.baseUrl
+  }
 
-    // Ensure prefix starts with / and ends with /
-    const normalizedPrefix = prefix.startsWith('/') ? prefix : `/${prefix}`
-    const finalPrefix = normalizedPrefix.endsWith('/') ? normalizedPrefix : `${normalizedPrefix}/`
-
-    return `${this.baseUrl}${finalPrefix}`
-  }  /**
+  /**
    * Generate a random unique slug
    * @param {number} length - The length of the slug.
    */
@@ -223,7 +222,7 @@ export default class ShortlinkService<Model extends ShortlinkModel = ShortlinkMo
    * @returns {string} The full short URL.
    */
   getShortUrl(slug: Model['slug']): string | undefined {
-    return slug ? `${this.getBasePathUrl()}${slug}` : undefined
+    return slug ? `${this.getBaseUrl()}${slug.replace(/\/$/, '')}` : undefined
   }
 
   /**
@@ -234,7 +233,7 @@ export default class ShortlinkService<Model extends ShortlinkModel = ShortlinkMo
    * @returns {string | undefined} The extracted slug or undefined if the short URL does not start with the base URL.
    */
   getSlugFromShortUrl(shortUrl: string | undefined): string | undefined {
-    const baseUrl = this.getBasePathUrl()
+    const baseUrl = this.getBaseUrl()
     if (shortUrl?.startsWith(baseUrl)) {
       return shortUrl.replace(baseUrl, '')
     }
