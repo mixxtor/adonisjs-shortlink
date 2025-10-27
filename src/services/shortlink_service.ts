@@ -9,25 +9,18 @@ import type {
 export default class ShortlinkService<Model extends ShortlinkModel = ShortlinkModel> implements ShortlinkServiceContract<Model> {
   private model: Model | undefined
   private configModel: ShortlinkConfig<Model>['model']
-  private baseUrl: string
+  private baseUrl!: string
 
   constructor(private config: ShortlinkConfig<Model>) {
     const { domain, protocol = 'https' } = this.config
-    this.setBaseUrl(domain, protocol)
     this.configModel = config.model
-    this.baseUrl = domain.startsWith('http') ? domain : `${protocol}://${domain}`
+    this.setBaseUrl(domain, protocol)
   }
 
-  setBaseUrl(domain: string, protocol: typeof this.config.protocol = 'https', prefix = this.config.prefix): void {
+  setBaseUrl(domain: string, protocol: typeof this.config.protocol = 'https'): void {
     const url = domain.startsWith('http') ? domain : `${protocol}://${domain}`
     const urls = new URL(url)
     this.baseUrl = `${urls.protocol}//${urls.host}`
-
-    // Ensure prefix starts with / and ends without /
-    const normalizedPrefix = prefix?.startsWith('/') ? prefix : `/${prefix}`
-    const finalPrefix = normalizedPrefix.endsWith('/') ? normalizedPrefix : `${normalizedPrefix}/`
-
-    this.baseUrl = `${this.baseUrl}${finalPrefix}`
   }
 
   getConfig(): ShortlinkConfig<Model> {
@@ -64,7 +57,12 @@ export default class ShortlinkService<Model extends ShortlinkModel = ShortlinkMo
    * @returns {string} The base URL with the prefix (if provided) for shortlinks.
    */
   getBaseUrl(): string {
-    return this.baseUrl
+    const prefix = this.config.prefix
+    // Ensure prefix starts with / and ends with /
+    const normalizedPrefix = prefix ? (prefix?.startsWith('/') ? prefix : `/${prefix}`) : ''
+    const finalPrefix = normalizedPrefix && !normalizedPrefix.endsWith('/') ? `${normalizedPrefix}/` : normalizedPrefix
+
+    return `${this.baseUrl}${finalPrefix}`
   }
 
   /**

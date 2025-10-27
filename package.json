@@ -53,10 +53,10 @@
     "@adonisjs/lucid": "^21.8.0",
     "@adonisjs/prettier-config": "^1.4.5",
     "@adonisjs/tsconfig": "^1.4.1",
-    "@japa/assert": "^4.1.1",
-    "@japa/runner": "^4.4.0",
+    "@commitlint/cli": "^20.0.0",
+    "@commitlint/config-conventional": "^20.0.0",
     "@release-it/conventional-changelog": "^10.0.1",
-    "@swc/core": "^1.13.21",
+    "@swc/core": "^1.13.5",
     "@types/node": "^24.9.1",
     "c8": "^10.1.3",
     "copyfiles": "^2.4.1",
@@ -107,6 +107,11 @@
         }
       }
     }
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
   },
   "c8": {
     "reporter": [
