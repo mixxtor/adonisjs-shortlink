@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 
 
+## <small>1.1.1 (2025-10-27)</small>
+
+* fix: update baseUrl handling in ShortlinkService to ensure proper prefix formatting ([182c5ec](https://github.com/mixxtor/adonisjs-shortlink/commit/182c5ec))
+* fix: update updateOrCreate method to use slug for shortlink identification and remove CreateShortlin ([3eeed30](https://github.com/mixxtor/adonisjs-shortlink/commit/3eeed30))
+* refactor: rename getBasePathUrl to getBaseUrl and update related methods for clarity ([2700316](https://github.com/mixxtor/adonisjs-shortlink/commit/2700316))
+
 ## [1.1.0](https://github.com/mixxtor/adonisjs-shortlink/compare/v1.0.0...v1.1.0) (2025-10-23)
 
 ### 🐛 Bug Fixes
