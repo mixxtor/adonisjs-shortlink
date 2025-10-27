@@ -241,10 +241,10 @@ export default class ShortlinkService<Model extends ShortlinkModel = ShortlinkMo
 
   /**
    * Update or create a shortlink for a URL
-   * - Find shortlink by id or original URL
+   * - Find shortlink by slug or original URL
    *   + If shortlink exists, update it
    *   + If shortlink doesn't exist, create it
-   * @param {string | number} idOrOriginalUrl - The ID or original URL of the shortlink to update or create.
+   * @param {string | number} slugOrUrl - The slug or original URL of the shortlink to update or create.
    * @param {Object} data - The data to update or create the shortlink with.
    * @param {string} data.original_url - The original URL of the shortlink.
    * @param {string} data.slug - The slug of the shortlink.
@@ -252,13 +252,11 @@ export default class ShortlinkService<Model extends ShortlinkModel = ShortlinkMo
    * @returns {Promise<ShortlinkModelContract<Model> | null>} The updated or created shortlink.
    */
   async updateOrCreate(
-    idOrOriginalUrl: Model['id'] | Model['original_url'],
+    slugOrUrl: Model['slug'] | Model['original_url'],
     data: Pick<Model, 'original_url'> & Partial<Pick<Model, 'slug' | 'metadata'>>
   ): Promise<ShortlinkModelContract<Model> | null> {
-    const existing =
-      typeof idOrOriginalUrl === 'string'
-        ? await this.getByOriginalUrl(idOrOriginalUrl)
-        : await this.getById(idOrOriginalUrl)
+    const model = await this.getModel()
+    const existing = await model.query().where('slug', slugOrUrl).orWhere('original_url', slugOrUrl).first() as ShortlinkModelContract<Model>
     const { original_url: originalUrl, slug, metadata = existing?.metadata } = data
 
     if (existing) {

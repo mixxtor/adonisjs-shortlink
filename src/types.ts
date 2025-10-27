@@ -94,15 +94,6 @@ export type ShortlinkModelContract<Model extends ShortlinkModel = ShortlinkModel
   InstanceType<Model> & ShortlinkAttributes & ShortlinkCustomMethods
 
 /**
- * Create shortlink payload
- */
-export interface CreateShortlinkPayload {
-  original_url: string
-  custom_slug?: string
-  metadata?: Record<string, any>
-}
-
-/**
  * Base interface that any shortlink model should implement
  */
 export type ShortlinkModel = LucidModel & ShortlinkAttributes & ShortlinkCustomMethods

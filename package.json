@@ -117,5 +117,10 @@
       "tests/**"
     ]
   },
-  "prettier": "@adonisjs/prettier-config"
+  "prettier": "@adonisjs/prettier-config",
+  "overrides": {
+    "@release-it/conventional-changelog": {
+      "@conventional-changelog/git-client": "^2.5.1"
+    }
+  }
 }
