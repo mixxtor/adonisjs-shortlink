@@ -6,7 +6,9 @@ import type {
   ShortlinkModelContract,
 } from '../types.js'
 
-export default class ShortlinkService<Model extends ShortlinkModel = ShortlinkModel> implements ShortlinkServiceContract<Model> {
+export default class ShortlinkService<Model extends ShortlinkModel = ShortlinkModel>
+  implements ShortlinkServiceContract<Model>
+{
   private model: Model | undefined
   private configModel: ShortlinkConfig<Model>['model']
   private baseUrl!: string
@@ -60,7 +62,10 @@ export default class ShortlinkService<Model extends ShortlinkModel = ShortlinkMo
     const prefix = this.config.prefix
     // Ensure prefix starts with / and ends with /
     const normalizedPrefix = prefix ? (prefix?.startsWith('/') ? prefix : `/${prefix}`) : ''
-    const finalPrefix = normalizedPrefix && !normalizedPrefix.endsWith('/') ? `${normalizedPrefix}/` : normalizedPrefix
+    const finalPrefix =
+      normalizedPrefix && !normalizedPrefix.endsWith('/')
+        ? `${normalizedPrefix}/`
+        : normalizedPrefix
 
     return `${this.baseUrl}${finalPrefix}`
   }
@@ -254,7 +259,11 @@ export default class ShortlinkService<Model extends ShortlinkModel = ShortlinkMo
     data: Pick<Model, 'original_url'> & Partial<Pick<Model, 'slug' | 'metadata'>>
   ): Promise<ShortlinkModelContract<Model> | null> {
     const model = await this.getModel()
-    const existing = await model.query().where('slug', slugOrUrl).orWhere('original_url', slugOrUrl).first() as ShortlinkModelContract<Model>
+    const existing = (await model
+      .query()
+      .where('slug', slugOrUrl)
+      .orWhere('original_url', slugOrUrl)
+      .first()) as ShortlinkModelContract<Model>
     const { original_url: originalUrl, slug, metadata = existing?.metadata } = data
 
     if (existing) {

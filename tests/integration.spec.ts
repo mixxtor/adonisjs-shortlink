@@ -3,7 +3,7 @@ import { defineConfig } from '../src/define_config.js'
 
 test.group('Integration Tests', () => {
   test('should define config with required fields', ({ assert }) => {
-    const mockModel = class MockModel { }
+    const mockModel = class MockModel {}
 
     const config = defineConfig({
       model: () => mockModel as any,
@@ -44,21 +44,18 @@ test.group('Integration Tests', () => {
   })
 
   test('should throw error when domain is missing', ({ assert }) => {
-    const mockModel = class MockModel { }
+    const mockModel = class MockModel {}
 
-    assert.throws(
-      () => {
-        defineConfig({
-          model: () => mockModel as any,
-          prefix: 's',
-        } as any)
-      },
-      'Shortlink domain is required. Please set SHORTLINK_DOMAIN in your environment.'
-    )
+    assert.throws(() => {
+      defineConfig({
+        model: () => mockModel as any,
+        prefix: 's',
+      } as any)
+    }, 'Shortlink domain is required. Please set SHORTLINK_DOMAIN in your environment.')
   })
 
   test('should use default values for optional config', ({ assert }) => {
-    const mockModel = class MockModel { }
+    const mockModel = class MockModel {}
 
     const config = defineConfig({
       model: () => mockModel as any,
@@ -77,7 +74,7 @@ test.group('Integration Tests', () => {
   })
 
   test('should override defaults with provided values', ({ assert }) => {
-    const mockModel = class MockModel { }
+    const mockModel = class MockModel {}
 
     const config = defineConfig({
       model: () => mockModel as any,

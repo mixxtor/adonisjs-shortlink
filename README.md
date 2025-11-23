@@ -362,7 +362,7 @@ When you run `node ace add @mixxtor/adonisjs-shortlink`, the package will automa
 **Include the generated routes in your `start/routes.ts`:**
 
 ```typescript
-import './shortlinks.js'  // Include generated shortlink routes
+import './shortlinks.js' // Include generated shortlink routes
 ```
 
 The generated routes file includes:
@@ -389,7 +389,7 @@ For production, use a separate short domain for redirects:
 // Only redirect functionality on short domain (short.yourdomain.com)
 router.get('/:slug', [ShortlinkController, 'redirect']).domain('short.yourdomain.com')
 
-// Main domain routes (yourdomain.com) 
+// Main domain routes (yourdomain.com)
 router
   .group(() => {
     router.post('/api/shortlinks', [ShortlinkController, 'store'])

@@ -89,7 +89,7 @@ export async function configure(command: Configure) {
     await codemods.makeUsingStub(stubsRoot, 'controllers/shortlink_controller.stub', {
       fileName: 'shortlink_controller.ts',
     })
-    
+
     // Create routes with custom controller
     await codemods.makeUsingStub(stubsRoot, 'routes/shortlink.stub', {
       fileName: 'shortlinks.ts',
@@ -107,7 +107,9 @@ export async function configure(command: Configure) {
     command.logger.info('   In start/routes.ts add:')
     command.logger.info('   import "./shortlinks.js"')
     command.logger.info('')
-    command.logger.info('4. Your shortlinks will be available at: GET /{config.shortlink.path}/:slug')
+    command.logger.info(
+      '4. Your shortlinks will be available at: GET /{config.shortlink.path}/:slug'
+    )
     command.logger.info('5. Customize the generated controller as needed')
     command.logger.info('')
     command.logger.info('🔗 Example usage:')
