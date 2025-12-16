@@ -1,6 +1,6 @@
 {
   "name": "@mixxtor/adonisjs-shortlink",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "A standalone URL shortener service for AdonisJS v6",
   "main": "build/index.js",
   "type": "module",
@@ -53,8 +53,6 @@
     "@adonisjs/lucid": "^21.8.1",
     "@adonisjs/prettier-config": "^1.4.5",
     "@adonisjs/tsconfig": "^1.4.1",
-    "@commitlint/cli": "^20.2.0",
-    "@commitlint/config-conventional": "^20.2.0",
     "@release-it/conventional-changelog": "^10.0.3",
     "@swc/core": "^1.15.5",
     "@types/node": "^25.0.2",
