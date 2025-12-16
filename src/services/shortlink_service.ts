@@ -6,9 +6,9 @@ import type {
   ShortlinkModelContract,
 } from '../types.js'
 
-export default class ShortlinkService<Model extends ShortlinkModel = ShortlinkModel>
-  implements ShortlinkServiceContract<Model>
-{
+export default class ShortlinkService<
+  Model extends ShortlinkModel = ShortlinkModel,
+> implements ShortlinkServiceContract<Model> {
   private model: Model | undefined
   private configModel: ShortlinkConfig<Model>['model']
   private baseUrl!: string
